@@ -10,8 +10,9 @@
 
     <!--Description-->
     
-        <meta name="description" content="我们假设一个极限情况：　　某一天，由于未能及时修补数据库服务器的漏斗，或因某个防火墙自身bug等等，服务器不幸被黑客攻击沦陷，数据被黑客窃取，如何最大程度的保证数据安全？
-　　假如真的发生类似事件，我想如果你没有提前做相应的数据保护措施，恐怕没有任何办法来防止数据最终的泄漏。但是，如果我们提前做了相">
+        <meta name="description" content="About MeMy name is Chunhui guo and this is my blog.
+I am a software engineer and CTO.
+I currently work in Beijing And Weifang China, hit me up if you ">
     
 
     <!--Author-->
@@ -21,7 +22,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="如果你的服务器不幸被黑，重要数据落入黑客手中（1）">
+        <meta property="og:title" content="About Me">
     
 
     <!--Open Graph Description-->
@@ -43,7 +44,7 @@
 
     <!-- Title -->
     
-    <title>如果你的服务器不幸被黑，重要数据落入黑客手中（1） - 技术的成功≠商业的成功，人生低潮来袭，何尝不是转折机遇。坚持去做事，总会有回报的时候</title>
+    <title>About Me - 技术的成功≠商业的成功，人生低潮来袭，何尝不是转折机遇。坚持去做事，总会有回报的时候</title>
 
     <!-- Tachyons Core CSS -->
     <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
@@ -99,8 +100,8 @@
     <!-- Title -->
     <div class="w-100 mw8 center vh-40 dt">
         <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2019-05-21</p>
+            <h1 class="f1-l f2-m tc tc-m tl-ns">About Me</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2019-04-21</p>
         </div>
     </div>
 
@@ -120,21 +121,9 @@
                     
 
                     <!-- Main Post Content -->
-                    <h2 id="我们假设一个极限情况："><a href="#我们假设一个极限情况：" class="headerlink" title="我们假设一个极限情况："></a>我们假设一个极限情况：</h2><p>　　某一天，由于未能及时修补数据库服务器的漏斗，或因某个防火墙自身bug等等，服务器不幸被黑客攻击沦陷，数据被黑客窃取，如何最大程度的保证数据安全？</p>
-<p>　　假如真的发生类似事件，我想如果你没有提前做相应的数据保护措施，恐怕没有任何办法来防止数据最终的泄漏。但是，如果我们提前做了相应的措施，那是可以减少损失甚至可以避免损失。</p>
-<p>　　那么，如何做？当然是对数据库加密。为保证安全，我们选用非对称加密技术，我们以RSA算法为例，说明相应的处理过程。</p>
-<h2 id="RSA算法的特点"><a href="#RSA算法的特点" class="headerlink" title="RSA算法的特点"></a>RSA算法的特点</h2><blockquote>
-<p>RSA 之所以叫非对称算法，是因为加密和解密的密钥不一样，任何一个密钥都可以用来加密，另一个密钥解密。</p>
-</blockquote>
-<h2 id="具体如何实现呢？总体思路及流程如下："><a href="#具体如何实现呢？总体思路及流程如下：" class="headerlink" title="具体如何实现呢？总体思路及流程如下："></a>具体如何实现呢？总体思路及流程如下：</h2><ul>
-<li>1、假设用RSA产生了密钥P（公钥）,Q（私钥）；则我们用P对数据加密，在需要提取/显示数据时，用Q解密;<br><em>注：只能使用Q解密，至于为什么请自行搜索rsa原理。</em></li>
-<li>2、设数据库服务器为dbServers,只存储业务数据；且所有密钥均不存储在dbServers上；如果黑客仅获得数据库服务器权限，他得到仅是加密后的数据，他既不知加密密钥，也不知解密密钥，所以此时数据安全。</li>
-<li>3、如果黑客获得了密钥P，则此时数据仍然是安全的。但他此时可以做一些密文比较（像一些用户弱密码，如123456，11111，这种情况神仙也没办法啊…)</li>
-<li>4、如果黑客获得了密钥Q（这个是假设Q所在服务器亦被黑客控制）……当然，我们的数据库不会只有一套密钥吧，而会有多个P,Q….如果黑客获得了一个Q，只影响一小部分数据。这里的关键之一，是密钥Q的存放位置以及数据的解密处理过程。</li>
-<li>5、如果需要高级别的安全，那么密钥Q不存放在任何服务器上，先将其加密其存放在UKEY中，需要操作数据时，插入UKEY….再配合证书、人脸识别等技术，验证操作者的身份，验证通过之后对密钥进行再解密，获得真正的密钥Q。</li>
-</ul>
-<p>　　第5步中，我们要求有权限的人必须参与到系统中，才能获取解密密钥，完成数据解密过程，保证了安全性。</p>
-<p>　　数据加密后，安全保证了，可是如何检索呢？如果数据加密后不能查询、检索，这个系统也没什么用了……关于这个问题，我们在“如果你的服务器不幸被黑，重要数据落入黑客手中（2）”再进行讨论。</p>
+                    <h2 id="About-Me"><a href="#About-Me" class="headerlink" title="About Me"></a>About Me</h2><p>My name is Chunhui guo and this is my blog.</p>
+<p>I am a software engineer and CTO.</p>
+<p>I currently work in Beijing And Weifang China, hit me up if you are in the region.</p>
 
                     
                     <!-- Tags Bottom -->
