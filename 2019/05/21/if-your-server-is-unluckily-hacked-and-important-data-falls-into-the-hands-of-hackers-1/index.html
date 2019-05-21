@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="我们假设一个极限情况：　　某一天，由于未能及时修补数据库服务器的漏斗，或因某个防火墙自身bug等等，服务器不幸被黑客攻击沦陷，数据被黑客窃取，如何最大程度的保证数据安全？
+　　假如真的发生类似事件，我想如果你没有提前做相应的数据保护措施，恐怕没有任何办法来防止数据最终的泄漏。但是，如果我们提前做了相">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Guo chunhui">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="如果你的服务器不幸被黑，重要数据落入黑客手中（1）">
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="郭春辉的个人网站">
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article">
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary">
+    
+
+    <!-- Title -->
+    
+    <title>如果你的服务器不幸被黑，重要数据落入黑客手中（1） - 郭春辉的个人网站</title>
+
+    <!-- Tachyons Core CSS -->
+    <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    
+    <nav class="db dt-l w-100 mw8 center border-box pv3">
+        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="郭春辉的个人网站">
+            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="郭春辉的个人网站">
+        </a>
+        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/" title="Home">
+                    Home
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/archives" title="Archives">
+                    Archives
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/about" title="About">
+                    About
+                </a>
+            
+        </div>
+    </nav>
+
+    <!-- Title -->
+    <div class="w-100 mw8 center vh-40 dt">
+        <div class="dtc v-mid white">
+            <h1 class="f1-l f2-m tc tc-m tl-ns">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2019-05-21</p>
+        </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="relative w-100 mw8 center white dn dn-m db-ns">
+        <i class="header-icon fa fa-file-text-o"></i>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
+                    <!-- Tags Vertical -->
+                    
+
+                    <!-- Main Post Content -->
+                    <h2 id="我们假设一个极限情况："><a href="#我们假设一个极限情况：" class="headerlink" title="我们假设一个极限情况："></a>我们假设一个极限情况：</h2><p>　　某一天，由于未能及时修补数据库服务器的漏斗，或因某个防火墙自身bug等等，服务器不幸被黑客攻击沦陷，数据被黑客窃取，如何最大程度的保证数据安全？</p>
+<p>　　假如真的发生类似事件，我想如果你没有提前做相应的数据保护措施，恐怕没有任何办法来防止数据最终的泄漏。但是，如果我们提前做了相应的措施，那是可以减少损失甚至可以避免损失。</p>
+<p>　　那么，如何做？当然是对数据库加密。为保证安全，我们选用非对称加密技术，我们以RSA算法为例，说明相应的处理过程。</p>
+<h2 id="RSA算法的特点"><a href="#RSA算法的特点" class="headerlink" title="RSA算法的特点"></a>RSA算法的特点</h2><blockquote>
+<p>RSA 之所以叫非对称算法，是因为加密和解密的密钥不一样，任何一个密钥都可以用来加密，另一个密钥解密。</p>
+</blockquote>
+<h2 id="具体如何实现呢？总体思路及流程如下："><a href="#具体如何实现呢？总体思路及流程如下：" class="headerlink" title="具体如何实现呢？总体思路及流程如下："></a>具体如何实现呢？总体思路及流程如下：</h2><ul>
+<li>1、假设用RSA产生了密钥P（公钥）,Q（私钥）；则我们用P对数据加密，在需要提取/显示数据时，用Q解密;<br><em>注：只能使用Q解密，至于为什么请自行搜索rsa原理。</em></li>
+<li>2、设数据库服务器为dbServers,只存储业务数据；且所有密钥均不存储在dbServers上；如果黑客仅获得数据库服务器权限，他得到仅是加密后的数据，他既不知加密密钥，也不知解密密钥，所以此时数据安全。</li>
+<li>3、如果黑客获得了密钥P，则此时数据仍然是安全的。但他此时可以做一些密文比较（像一些用户弱密码，如123456，11111，这种情况神仙也没办法啊…)</li>
+<li>4、如果黑客获得了密钥Q（这个是假设Q所在服务器亦被黑客控制）……当然，我们的数据库不会只有一套密钥吧，而会有多个P,Q….如果黑客获得了一个Q，只影响一小部分数据。这里的关键之一，是密钥Q的存放位置以及数据的解密处理过程。</li>
+<li>5、如果需要高级别的安全，那么密钥Q不存放在任何服务器上，先将其加密其存放在UKEY中，需要操作数据时，插入UKEY….再配合证书、人脸识别等技术，验证操作者的身份，验证通过之后对密钥进行再解密，获得真正的密钥Q。</li>
+</ul>
+<p>　　第5步中，我们要求有权限的人必须参与到系统中，才能获取解密密钥，完成数据解密过程，保证了安全性。</p>
+<p>　　数据加密后，安全保证了，可是如何检索呢？如果数据加密后不能查询、检索，这个系统也没什么用了……关于这个问题，我们在“如果你的服务器不幸被黑，重要数据落入黑客手中（2）”再进行讨论。</p>
+
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+
+
+                </div>
+                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
+                    
+                    <hr class="dn-l mw4 black-50 mt5">
+                    
+                    <!-- Widget 1: About -->
+                    <div class="mt5 mt0-l">
+    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
+        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
+            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="Guo chunhui">
+        </div>
+        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
+            My name is Chunhui guo and this is my blog.<br>I am a software engineer and CTO.<br> I currently work in Beijing And Weifang China, hit me up if you are in the region.
+        </div>
+    </article>
+</div>
+
+                    <hr class="dn-l mw4 black-50 mt5">
+                    
+                    <!-- Widget 2: Categories -->
+                    
+
+                    <!-- Widget 3: Recent Posts -->
+                    <div class="mt5 tc tl-l">
+    <h3>Recent Posts</h3>
+    
+        <p>
+            <a href="/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</a>
+        </p>
+    
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="bg-1 ph2 ph5-ns pv5">
+        <div class="mv8">
+            <div class="center tc">
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
+                            <i class="fa fa-behance"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
+                            <i class="fa fa-500px"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                
+            </div>
+            <div class="f6 f5-ns center tc white pt5 fw3">
+                @Untitled. All right reserved | Design & Hexo <a class="link dim white" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+            </div>
+        </div>
+    </div>
+
+<!-- After Footer -->
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
