@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 郭春辉的个人网站
+title: 坚持就是胜利，剩者为王
 subtitle:
 description:
 keywords:
-author: Guo chunhui
+author: Chunhui Guo 
 language: zh-Hans
 timezone: Asia/Shanghai
 
@@ -36,7 +36,7 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
@@ -78,11 +78,16 @@ pagination_dir: page
 #theme: next
 theme: anodyne
 #theme: hexo-theme-xoxo
+toc:
+  maxDepth: 3
+  class: toc
+
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://gchyhyf:gyh62885291@github.com/gchyhyf/gchyhyf.github.io.git
-  branch: master
+  repo:
+    github: https://gchyhyf:gyh62885291@github.com/gchyhyf/gchyhyf.github.io.git,master
+    w3c0: http://gch:gyh62885291@git.w3c0.com:31011/r/blog/gch.git,master
  # message: [message]
