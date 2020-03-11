@@ -2,7 +2,13 @@
 title: >-
   如果你的服务器不幸被黑，重要数据落入黑客手中（2）
 date: 2019-05-22 19:04:21
+categories:
+- [开发,安全]
 tags:
+- 黑客
+- 安全
+- 加密
+- 数据
 ---
 ## 1.前文回顾与安全简述
 　　我们在上次的文章[如果你的服务器不幸被黑，重要数据落入黑客手中（1）](/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/)中介绍了一种对数据库加密的方案，达到在极限情况下也能保证数据安全性的目的。

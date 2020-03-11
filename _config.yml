@@ -76,8 +76,9 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 #theme: landscape
 #theme: next
-theme: anodyne
+#theme: anodyne
 #theme: hexo-theme-xoxo
+theme: hexo-theme-xoxo-plus
 toc:
   maxDepth: 3
   class: toc

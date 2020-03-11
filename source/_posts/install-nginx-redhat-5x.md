@@ -2,7 +2,12 @@
 title: >-
   在RedHat 5.6 x64下安装Nginx
 date: 2019-05-23 19:04:21
+categories:
+- [运维,web-server]
 tags:
+- linux
+- redhat
+- nginx
 ---
 　　有一台客户服务器所安装的系统比较老，据说无法安装Nginx，今天有点时间，特意看了一下顺手解决之。
 

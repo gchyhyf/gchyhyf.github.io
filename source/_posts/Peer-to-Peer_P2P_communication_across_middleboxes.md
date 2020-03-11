@@ -2,13 +2,15 @@
 title: >-
   Peer-to-Peer (P2P) communication across middleboxes
 date: 2019-06-11 19:10:36
+categories:
+- [开发,网络]
 tags:
+- p2p
+- nat
+- applications
 ---
-# Table of Contents
 
-[TOC]
-
-# 1. Introduction
+# 1.Introduction
 
    Present-day Internet has seen ubiquitous deployment of
    "middleboxes" such as network address translators(NAT), driven
