@@ -79,10 +79,34 @@ pagination_dir: page
 #theme: anodyne
 #theme: hexo-theme-xoxo
 theme: hexo-theme-xoxo-plus
-toc:
-  maxDepth: 3
-  class: toc
+markdown:
+  render:
+    html: true
+    xhtmlOut: false
+    breaks: true
+    linkify: true
+    typographer: true
+    quotes: '“”‘’'
+  plugins:
+  anchors:
+    level: 1
+    collisionSuffix: ''
+    permalink: false
+    permalinkClass: 'header-anchor'
+    permalinkSide: 'left'
+    permalinkSymbol: '¶'
+    case: 0
+    separator: '-'
 
+# toc:
+#   maxDepth: 3
+#   class: toc
+#   slugify: true
+  # decodeEntities: false
+  # anchor:
+  #   position: after
+  #   symbol: '#'
+  #   style: header-anchor
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
