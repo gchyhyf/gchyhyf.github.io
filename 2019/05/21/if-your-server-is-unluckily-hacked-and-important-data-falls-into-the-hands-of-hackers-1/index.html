@@ -1,275 +1,344 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
 
-<!-- Head tag -->
-<head><meta name="generator" content="Hexo 3.8.0">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
 
-    <!--Description-->
+  
+    <meta name="keywords" content="黑客,安全,加密,数据," />
+  
+
+  
+    <meta name="description" content="分享程序开发、架构设计以及算法相关的知识、经验、技巧，也顺便分享一些项目管理、操作系统,系统运维、网络等相关知识。" />
+  
+
+  
+  <link rel="icon" type="image/x-icon" href="/images/footer-logo.png">
+  
+  <title>如果你的服务器不幸被黑，重要数据落入黑客手中（1） [ 程序与算法 - 郭春辉的博客 - ]</title>
+  
+    <!-- stylesheets list from config.yml -->
     
-        <meta name="description" content="我们假设一个极限情况：　　某一天，由于未能及时修补数据库服务器的漏斗，或因某个防火墙自身bug等等，服务器不幸被黑客攻击沦陷，数据被黑客窃取，如何最大程度的保证数据安全？
-　　假如真的发生类似事件，我想如果你没有提前做相应的数据保护措施，恐怕没有任何办法来防止数据最终的泄漏。但是，如果我们提前做了相">
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
     
-
-    <!--Author-->
+      <link rel="stylesheet" href="/css/xoxo.css">
     
-        <meta name="author" content="Chunhui Guo">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="如果你的服务器不幸被黑，重要数据落入黑客手中（1）">
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="坚持就是胜利，剩者为王">
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article">
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary">
-    
-
-    <!-- Title -->
-    
-    <title>如果你的服务器不幸被黑，重要数据落入黑客手中（1） - 坚持就是胜利，剩者为王</title>
-
-    <!-- Tachyons Core CSS -->
-    <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
-    
-
-
-</head>
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
 
 
 <body>
-
-<!-- Main Content -->
-<!-- Banner -->
-<!-- Banner -->
-<div class="w-100 bg-1 ph5-ns ph3 text-light">
+  <div class="nav-container">
+    <nav class="home-menu pure-menu pure-menu-horizontal">
+  <a class="pure-menu-heading" href="/">
     
-    <nav class="db dt-l w-100 mw8 center border-box pv3">
-        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="坚持就是胜利，剩者为王">
-            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="坚持就是胜利，剩者为王">
-        </a>
-        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/" title="Home">
-                    Home
-                </a>
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/archives" title="Archives">
-                    Archives
-                </a>
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/2019/04/21/about/" title="About">
-                    About
-                </a>
-            
-        </div>
-    </nav>
+    <span class="title" style="text-transform:none">程序与算法 - 郭春辉的博客 -</span>
+  </a>
 
-    <!-- Title -->
-    <div class="w-100 mw8 center vh-40 dt">
-        <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2019-05-21</p>
-        </div>
-    </div>
+  <ul class="pure-menu-list clearfix">
+      
+          
+            
+              <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/archives" class="pure-menu-link">文章</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/categories" class="pure-menu-link">分类</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+            
+          
+      
+  </ul>
+   
+</nav>
 
-    <!-- Icon -->
-    <div class="relative w-100 mw8 center white dn dn-m db-ns">
-        <i class="header-icon fa fa-file-text-o"></i>
-    </div>
-</div>
+  </div>
 
-<!-- Content -->
-<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
-    <div class="content">
-        <div class="mw8 center">
-            <div class="cf">
-                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
-                    <!-- Tags Vertical -->
-                    
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <div class="post-container">
+  <article class="post" id="post">
+    <header class="post-header text-center">
+      <h1 class="title">
+        如果你的服务器不幸被黑，重要数据落入黑客手中（1）
+      </h1>
+      <span>
+        
+        <time class="time" datetime="2019-05-21T02:04:21.000Z">
+        2019-05-21
+      </time>
+        
+      </span>
+      <span class="slash">/</span>
+      <span class="post-meta">
+      <span class="post-tags">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86/" rel="tag">加密</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE/" rel="tag">数据</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2/" rel="tag">黑客</a></li></ul>
+      </span>
+    </span>
+      <span class="slash">/</span>
+      <span class="read">
+      <span id="busuanzi_value_page_pv"></span> 点击
+    </span>
+      <span class="slash">/</span>
+      <span class="read">阅读耗时 5 分钟</span>
+    </header>
 
-                    <!-- Main Post Content -->
-                    <h2 id="我们假设一个极限情况："><a href="#我们假设一个极限情况：" class="headerlink" title="我们假设一个极限情况："></a>我们假设一个极限情况：</h2><p>　　某一天，由于未能及时修补数据库服务器的漏斗，或因某个防火墙自身bug等等，服务器不幸被黑客攻击沦陷，数据被黑客窃取，如何最大程度的保证数据安全？</p>
-<p>　　假如真的发生类似事件，我想如果你没有提前做相应的数据保护措施，恐怕没有任何办法来防止数据最终的泄漏。但是，如果我们提前做了相应的措施，那是可以减少损失甚至可以避免损失。</p>
-<p>　　那么，如何做？当然是对数据库加密。为保证安全，我们选用非对称加密技术，我们以RSA算法为例，说明相应的处理过程。</p>
-<h2 id="RSA算法的特点"><a href="#RSA算法的特点" class="headerlink" title="RSA算法的特点"></a>RSA算法的特点</h2><blockquote>
+    <div class="post-content">
+      <h2 id="我们假设一个极限情况：">我们假设一个极限情况：</h2>
+<p>某一天，由于未能及时修补数据库服务器的漏斗，或因某个防火墙自身bug等等，服务器不幸被黑客攻击沦陷，数据被黑客窃取，如何最大程度的保证数据安全？</p>
+<p>假如真的发生类似事件，我想如果你没有提前做相应的数据保护措施，恐怕没有任何办法来防止数据最终的泄漏。但是，如果我们提前做了相应的措施，那是可以减少损失甚至可以避免损失。</p>
+<p>那么，如何做？当然是对数据库加密。为保证安全，我们选用非对称加密技术，我们以RSA算法为例，说明相应的处理过程。</p>
+<h2 id="RSA算法的特点">RSA算法的特点</h2>
+<blockquote>
 <p>RSA 之所以叫非对称算法，是因为加密和解密的密钥不一样，任何一个密钥都可以用来加密，另一个密钥解密。</p>
 </blockquote>
-<h2 id="具体如何实现呢？总体思路及流程如下："><a href="#具体如何实现呢？总体思路及流程如下：" class="headerlink" title="具体如何实现呢？总体思路及流程如下："></a>具体如何实现呢？总体思路及流程如下：</h2><ul>
-<li>1、假设用RSA产生了密钥P（公钥）,Q（私钥）；则我们用P对数据加密，在需要提取/显示数据时，用Q解密;<br><em>注：只能使用Q解密，至于为什么请自行搜索rsa原理。</em></li>
+<h2 id="具体如何实现呢？总体思路及流程如下：">具体如何实现呢？总体思路及流程如下：</h2>
+<ul>
+<li>1、假设用RSA产生了密钥P（公钥）,Q（私钥）；则我们用P对数据加密，在需要提取/显示数据时，用Q解密;<br>
+<em>注：只能使用Q解密，至于为什么请自行搜索rsa原理。</em></li>
 <li>2、设数据库服务器为dbServers,只存储业务数据；且所有密钥均不存储在dbServers上；如果黑客仅获得数据库服务器权限，他得到仅是加密后的数据，他既不知加密密钥，也不知解密密钥，所以此时数据安全。</li>
 <li>3、如果黑客获得了密钥P，则此时数据仍然是安全的。但他此时可以做一些密文比较（像一些用户弱密码，如123456，11111，这种情况神仙也没办法啊…)</li>
-<li>4、如果黑客获得了密钥Q（这个是假设Q所在服务器亦被黑客控制）……当然，我们的数据库不会只有一套密钥吧，而会有多个P,Q….如果黑客获得了一个Q，只影响一小部分数据。这里的关键之一，是密钥Q的存放位置以及数据的解密处理过程。</li>
-<li>5、如果需要高级别的安全，那么密钥Q不存放在任何服务器上，先将其加密其存放在UKEY中，需要操作数据时，插入UKEY….再配合证书、人脸识别等技术，验证操作者的身份，验证通过之后对密钥进行再解密，获得真正的密钥Q。</li>
+<li>4、如果黑客获得了密钥Q（这个是假设Q所在服务器亦被黑客控制）…当然，我们的数据库不会只有一套密钥吧，而会有多个P,Q…如果黑客获得了一个Q，只影响一小部分数据。这里的关键之一，是密钥Q的存放位置以及数据的解密处理过程。</li>
+<li>5、如果需要高级别的安全，那么密钥Q不存放在任何服务器上，先将其加密其存放在UKEY中，需要操作数据时，插入UKEY…再配合证书、人脸识别等技术，验证操作者的身份，验证通过之后对密钥进行再解密，获得真正的密钥Q。</li>
 </ul>
-<p>　　第5步中，我们要求有权限的人必须参与到系统中，才能获取解密密钥，完成数据解密过程，保证了安全性。</p>
-<p>　　数据加密后，安全保证了，可是如何检索呢？如果数据加密后不能查询、检索，这个系统也没什么用了……关于这个问题，我们在“如果你的服务器不幸被黑，重要数据落入黑客手中（2）”再进行讨论。</p>
+<p>第5步中，我们要求有权限的人必须参与到系统中，才能获取解密密钥，完成数据解密过程，保证了安全性。</p>
+<p>数据加密后，安全保证了，可是如何检索呢？如果数据加密后不能查询、检索，这个系统也没什么用了…关于这个问题，我们在“如果你的服务器不幸被黑，重要数据落入黑客手中（2）”再进行讨论。</p>
 
-                    
-                    <!-- Tags Bottom -->
-                    
-
-                    <!-- Comments -->
-                    
-
-
-
-                </div>
-                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
-                    
-                    <hr class="dn-l mw4 black-50 mt5">
-                    
-                    <!-- Widget 1: About -->
-                    <div class="mt5 mt0-l">
-    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
-        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
-            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="Chunhui Guo">
-        </div>
-        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
-            My name is Chunhui guo and this is my blog.<br>I am a software engineer and CTO.<br> I currently work in Beijing And Weifang China, hit me up if you are in the region.
-        </div>
-    </article>
-</div>
-
-                    <hr class="dn-l mw4 black-50 mt5">
-                    
-                    <!-- Widget 2: Categories -->
-                    
-
-                    <!-- Widget 3: Recent Posts -->
-                    <div class="mt5 tc tl-l">
-    <h3>Recent Posts</h3>
-    
-        <p>
-            <a href="/2019/06/11/Peer-to-Peer_P2P_communication_across_middleboxes/">Peer-to-Peer (P2P) communication across middleboxe</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/23/install-nginx-redhat-5x/">在RedHat 5.6 x64下安装Nginx</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/22/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-2/">如果你的服务器不幸被黑，重要数据落入黑客手中（2）</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</a>
-        </p>
-    
-        <p>
-            <a href="/2019/04/24/create-your-blog-with-hexo/">用hexo创建你的个人博客--快速入门</a>
-        </p>
-    
-</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Footer -->
-<div class="bg-1 ph2 ph5-ns pv5">
-        <div class="mv8">
-            <div class="center tc">
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
-                            <i class="fa fa-facebook"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
-                            <i class="fa fa-dribbble"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
-                            <i class="fa fa-google-plus"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
-                            <i class="fa fa-behance"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
-                            <i class="fa fa-500px"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
-                            <i class="fa fa-envelope"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
-                            <i class="fa fa-rss"></i>
-                        </a>
-                    </div>
-                
-            </div>
-            <div class="f6 f5-ns center tc white pt5 fw3">
-                @Untitled. All right reserved | Design & Hexo <a class="link dim white" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-            </div>
-        </div>
+      <p><strong>欢迎关注公众号：程序与算法</strong></p>
+<p><img src="/images/wx-mp-png/stand.png" alt="程序与算法"></p>
     </div>
 
-<!-- After Footer -->
-<!-- Disqus Comments -->
+  </article>
+  <div class="toc-container">
+    
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#我们假设一个极限情况："><span class="toc-text">我们假设一个极限情况：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSA算法的特点"><span class="toc-text">RSA算法的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体如何实现呢？总体思路及流程如下："><span class="toc-text">具体如何实现呢？总体思路及流程如下：</span></a></li></ol>
+  </div>
 
+
+  </div>
+
+</div>
+
+<div class="copyright">
+    <span>本作品采用</span>
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">知识共享署名 4.0 国际许可协议</a>
+    <span>进行许可。 转载时请注明原文链接。</span>
+</div>
+
+
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2019/04/24/create-your-blog-with-hexo/" rel="next" title="用hexo创建你的个人博客--快速入门">
+          用hexo创建你的个人博客--快速入门
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+          
+          <a href="/2019/05/22/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-2/" rel="prev" title="如果你的服务器不幸被黑，重要数据落入黑客手中（2）">
+            如果你的服务器不幸被黑，重要数据落入黑客手中（2）
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+
+    </div>
+
+    
+
+  </div>
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+        <a class="bottom-item" href="http://www.w3c0.com" target="_blank">w3c</a> |
+        <a class="bottom-item" href="/">友情链接</a> |
+        <a class="bottom-item" href="https://hexo.io" target="_blank">Powered by hexo</a> |
+        <!-- <a class="bottom-item" href="https://github.com/fooying/hexo-theme-xoxo-plus" target="_blank">Theme xoxo-plus</a> | -->
+        <!-- <a class="bottom-item" href="/atom.xml">订阅</a> -->
+    </div>
+</footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+  
+<script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+</script>
 
 
 </body>
-
 </html>

@@ -1,303 +1,404 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
 
-<!-- Head tag -->
-<head><meta name="generator" content="Hexo 3.8.0">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
 
-    <!--Description-->
+  
+    <meta name="keywords" content="黑客,安全,加密,数据," />
+  
+
+  
+    <meta name="description" content="分享程序开发、架构设计以及算法相关的知识、经验、技巧，也顺便分享一些项目管理、操作系统,系统运维、网络等相关知识。" />
+  
+
+  
+  <link rel="icon" type="image/x-icon" href="/images/footer-logo.png">
+  
+  <title>如果你的服务器不幸被黑，重要数据落入黑客手中（2） [ 程序与算法 - 郭春辉的博客 - ]</title>
+  
+    <!-- stylesheets list from config.yml -->
     
-        <meta name="description" content="1.前文回顾与安全简述　　我们在上次的文章如果你的服务器不幸被黑，重要数据落入黑客手中（1）中介绍了一种对数据库加密的方案，达到在极限情况下也能保证数据安全性的目的。　　在这里，我们再强调一次：
-
-数据库加密是防止数据泄漏的最后一道屏障、终级防御方案。
-
-　　显然，这不是系统安全的唯一措施；事实上，">
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
     
-
-    <!--Author-->
+      <link rel="stylesheet" href="/css/xoxo.css">
     
-        <meta name="author" content="Chunhui Guo">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="如果你的服务器不幸被黑，重要数据落入黑客手中（2）">
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="坚持就是胜利，剩者为王">
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article">
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary">
-    
-
-    <!-- Title -->
-    
-    <title>如果你的服务器不幸被黑，重要数据落入黑客手中（2） - 坚持就是胜利，剩者为王</title>
-
-    <!-- Tachyons Core CSS -->
-    <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
-    
-
-
-</head>
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
 
 
 <body>
-
-<!-- Main Content -->
-<!-- Banner -->
-<!-- Banner -->
-<div class="w-100 bg-1 ph5-ns ph3 text-light">
+  <div class="nav-container">
+    <nav class="home-menu pure-menu pure-menu-horizontal">
+  <a class="pure-menu-heading" href="/">
     
-    <nav class="db dt-l w-100 mw8 center border-box pv3">
-        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="坚持就是胜利，剩者为王">
-            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="坚持就是胜利，剩者为王">
-        </a>
-        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/" title="Home">
-                    Home
-                </a>
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/archives" title="Archives">
-                    Archives
-                </a>
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/2019/04/21/about/" title="About">
-                    About
-                </a>
-            
-        </div>
-    </nav>
+    <span class="title" style="text-transform:none">程序与算法 - 郭春辉的博客 -</span>
+  </a>
 
-    <!-- Title -->
-    <div class="w-100 mw8 center vh-40 dt">
-        <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">如果你的服务器不幸被黑，重要数据落入黑客手中（2）</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2019-05-22</p>
-        </div>
-    </div>
+  <ul class="pure-menu-list clearfix">
+      
+          
+            
+              <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/archives" class="pure-menu-link">文章</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/categories" class="pure-menu-link">分类</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+            
+          
+      
+  </ul>
+   
+</nav>
 
-    <!-- Icon -->
-    <div class="relative w-100 mw8 center white dn dn-m db-ns">
-        <i class="header-icon fa fa-file-text-o"></i>
-    </div>
-</div>
+  </div>
 
-<!-- Content -->
-<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
-    <div class="content">
-        <div class="mw8 center">
-            <div class="cf">
-                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
-                    <!-- Tags Vertical -->
-                    
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <div class="post-container">
+  <article class="post" id="post">
+    <header class="post-header text-center">
+      <h1 class="title">
+        如果你的服务器不幸被黑，重要数据落入黑客手中（2）
+      </h1>
+      <span>
+        
+        <time class="time" datetime="2019-05-22T11:04:21.000Z">
+        2019-05-22
+      </time>
+        
+      </span>
+      <span class="slash">/</span>
+      <span class="post-meta">
+      <span class="post-tags">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86/" rel="tag">加密</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE/" rel="tag">数据</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2/" rel="tag">黑客</a></li></ul>
+      </span>
+    </span>
+      <span class="slash">/</span>
+      <span class="read">
+      <span id="busuanzi_value_page_pv"></span> 点击
+    </span>
+      <span class="slash">/</span>
+      <span class="read">阅读耗时 13 分钟</span>
+    </header>
 
-                    <!-- Main Post Content -->
-                    <h2 id="1-前文回顾与安全简述"><a href="#1-前文回顾与安全简述" class="headerlink" title="1.前文回顾与安全简述"></a>1.前文回顾与安全简述</h2><p>　　我们在上次的文章<a href="/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</a>中介绍了一种对数据库加密的方案，达到在极限情况下也能保证数据安全性的目的。<br>　　在这里，我们再强调一次：</p>
+    <div class="post-content">
+      <h2 id="1-前文回顾与安全简述">1.前文回顾与安全简述</h2>
+<p>我们在上次的文章<a href="/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</a>中介绍了一种对数据库加密的方案，达到在极限情况下也能保证数据安全性的目的。<br>
+　　在这里，我们再强调一次：</p>
 <blockquote>
 <p>数据库加密是防止数据泄漏的最后一道屏障、终级防御方案。</p>
 </blockquote>
-<p>　　显然，这不是系统安全的唯一措施；事实上，有太多的措施。作为一个系统的设计者，你应该采取各种措施，尽可能将入侵者挡在外层系统。</p>
+<p>显然，这不是系统安全的唯一措施；事实上，有太多的措施。作为一个系统的设计者，你应该采取各种措施，尽可能将入侵者挡在外层系统。</p>
 <blockquote>
 <p>应该考虑的安全措施（但不限于下面所列内容）：</p>
 </blockquote>
 <ul>
-<li>物理安全<br>　　例如机房环境，服务器，进出人员接触……</li>
-<li>网络安全<br>　　例如是否加装防火墙，入侵检测，网络审计等网络设备，以及设备自身的安全、冗余……</li>
-<li>主机安全<br>　　这个包括的范围更多了，例如系统是否及时更新补丁，系统日志审计，木马检测，病毒检测，会话管理，等等……</li>
-<li>数据安全<br>　　除了防止被入侵者获取、破坏之外，也要防止用户越权访问以及硬件故障、用户误操作、造成的数据损坏……</li>
-<li>应用安全<br>　　最重要的就是代码安全，即开发的各类业务软件、系统代码自身的安全性。事实上，这往往成为系统最薄弱的环节……</li>
-<li>管理安全<br>　　最要的就是对系统安全形成制度化、常态化的管理，除了平时的监控，要定期检查、分析。</li>
+<li>物理安全<br>
+　　例如机房环境，服务器，进出人员接触…</li>
+<li>网络安全<br>
+　　例如是否加装防火墙，入侵检测，网络审计等网络设备，以及设备自身的安全、冗余…</li>
+<li>主机安全<br>
+　　这个包括的范围更多了，例如系统是否及时更新补丁，系统日志审计，木马检测，病毒检测，会话管理，等等…</li>
+<li>数据安全<br>
+　　除了防止被入侵者获取、破坏之外，也要防止用户越权访问以及硬件故障、用户误操作、造成的数据损坏…</li>
+<li>应用安全<br>
+　　最重要的就是代码安全，即开发的各类业务软件、系统代码自身的安全性。事实上，这往往成为系统最薄弱的环节…</li>
+<li>管理安全<br>
+　　最要的就是对系统安全形成制度化、常态化的管理，除了平时的监控，要定期检查、分析。</li>
 </ul>
-<p>　　接下来，我们讨论当数据库加密策略以及加密后，如何实现数据的检索。</p>
-<h2 id="2-数据库加密的策略"><a href="#2-数据库加密的策略" class="headerlink" title="2. 数据库加密的策略"></a>2. 数据库加密的策略</h2><p>　　在正式讨论这个问题之前，我们先考虑一下，一个表包含若干列（字段），所有列是否都需要进行加密？</p>
-<h3 id="2-1-只对重要及敏感信息进行加密"><a href="#2-1-只对重要及敏感信息进行加密" class="headerlink" title="2.1.只对重要及敏感信息进行加密"></a>2.1.只对重要及敏感信息进行加密</h3><p>　　换句话说，只对系统中敏感的信息，或者认为重要的信息（即使数据被泄漏，也不希望获取者知道是什么的数据）进行加密；不敏感且对系统无影响的数据，则不需要加密，比如记录的创建时间，主键等，一般是非敏感数据。再说，加密虽好，可是会大大影响系统运行速度啊。</p>
-<h3 id="2-2-对于不需要显示的数据，可以采用不可逆加密"><a href="#2-2-对于不需要显示的数据，可以采用不可逆加密" class="headerlink" title="2.2.对于不需要显示的数据，可以采用不可逆加密"></a>2.2.对于不需要显示的数据，可以采用不可逆加密</h3><p>　　典型的如密码，可以采用不可逆加密(哈希)，如md5。但是为了防止黑客通过彩虹表反查原始口令，在计算哈希的时候，不直接对输入进行哈希，需要增加一个key来使得相同的输入也能得到不同的哈希，要验证哈希值，必须同时提供正确的key，即Hmac算法：Keyed-Hashing for Message Authentication。它通过一个标准算法，在计算哈希的过程中，把key混入计算过程中。<br>　　通过Hmac算法，大大降低了黑客破解的运气。</p>
-<h2 id="3-数据库加密后的检索"><a href="#3-数据库加密后的检索" class="headerlink" title="3.数据库加密后的检索"></a>3.数据库加密后的检索</h2><h3 id="3-1-精确查询"><a href="#3-1-精确查询" class="headerlink" title="3.1.精确查询"></a>3.1.精确查询</h3><p>　　精确查询的处理比较简单，只需要对待查询内容，也进行加密，获得对应密文，从数据库中比较密文即可。<br>　　显然，为提搞速度，我们应该对库中的密文列进行索引，形成密文索引，在密文索引上进行查询。</p>
-<h3 id="3-2-模糊查询"><a href="#3-2-模糊查询" class="headerlink" title="3.2.模糊查询"></a>3.2.模糊查询</h3><p>　　典型的如输入一个汉字关键词，查找包含这个关键词的数据。对于此类问题，可按如下方案处理：<br>　　（1）对库中加密列数据存储时，先对其进行分词处理，如生成n个词的集合,W={W1W2,W3…Wn}<br>　　（2）对集合W中的每个词进行加密存储。<br>　　（3）检索时，对待查询关键词searchkey，同样先进行拆词，形成集合Key={Key1,Key2…Keyn}<br>　　（4）对Key中的每个词进行检索，然后对结果集进行合并。</p>
-<h3 id="3-3-范围查询"><a href="#3-3-范围查询" class="headerlink" title="3.3.范围查询"></a>3.3.范围查询</h3><p>　　在密文上进行范围查询显然是极其困难的，好处是我们并非总是需要在密文列上进行范围查询。如果能使用上文提到非加密列进行查询，那是最好不过了；可是，如果不能怎么办？<br>　　办法总还是有的，不过你必须明白一点：</p>
+<p>接下来，我们讨论当数据库加密策略以及加密后，如何实现数据的检索。</p>
+<h2 id="2-数据库加密的策略">2. 数据库加密的策略</h2>
+<p>在正式讨论这个问题之前，我们先考虑一下，一个表包含若干列（字段），所有列是否都需要进行加密？</p>
+<h3 id="2-1-只对重要及敏感信息进行加密">2.1.只对重要及敏感信息进行加密</h3>
+<p>换句话说，只对系统中敏感的信息，或者认为重要的信息（即使数据被泄漏，也不希望获取者知道是什么的数据）进行加密；不敏感且对系统无影响的数据，则不需要加密，比如记录的创建时间，主键等，一般是非敏感数据。再说，加密虽好，可是会大大影响系统运行速度啊。</p>
+<h3 id="2-2-对于不需要显示的数据，可以采用不可逆加密">2.2.对于不需要显示的数据，可以采用不可逆加密</h3>
+<p>典型的如密码，可以采用不可逆加密(哈希)，如md5。但是为了防止黑客通过彩虹表反查原始口令，在计算哈希的时候，不直接对输入进行哈希，需要增加一个key来使得相同的输入也能得到不同的哈希，要验证哈希值，必须同时提供正确的key，即Hmac算法：Keyed-Hashing for Message Authentication。它通过一个标准算法，在计算哈希的过程中，把key混入计算过程中。<br>
+　　通过Hmac算法，大大降低了黑客破解的运气。</p>
+<h2 id="3-数据库加密后的检索">3.数据库加密后的检索</h2>
+<h3 id="3-1-精确查询">3.1.精确查询</h3>
+<p>精确查询的处理比较简单，只需要对待查询内容，也进行加密，获得对应密文，从数据库中比较密文即可。<br>
+　　显然，为提搞速度，我们应该对库中的密文列进行索引，形成密文索引，在密文索引上进行查询。</p>
+<h3 id="3-2-模糊查询">3.2.模糊查询</h3>
+<p>典型的如输入一个汉字关键词，查找包含这个关键词的数据。对于此类问题，可按如下方案处理：<br>
+　　（1）对库中加密列数据存储时，先对其进行分词处理，如生成n个词的集合,W={W1W2,W3…Wn}<br>
+　　（2）对集合W中的每个词进行加密存储。<br>
+　　（3）检索时，对待查询关键词searchkey，同样先进行拆词，形成集合Key={Key1,Key2…Keyn}<br>
+　　（4）对Key中的每个词进行检索，然后对结果集进行合并。</p>
+<h3 id="3-3-范围查询">3.3.范围查询</h3>
+<p>在密文上进行范围查询显然是极其困难的，好处是我们并非总是需要在密文列上进行范围查询。如果能使用上文提到非加密列进行查询，那是最好不过了；可是，如果不能怎么办？<br>
+　　办法总还是有的，不过你必须明白一点：</p>
 <blockquote>
 <p>基于密文的范围查询是一个不精确查询，即结果会存在误差。</p>
 </blockquote>
-<p>　　这里介绍两种方案：基于前缀编码的搜索模型和基于栅格编码的二维数据搜索模型。
-　　</p>
+<p>这里介绍两种方案：基于前缀编码的搜索模型和基于栅格编码的二维数据搜索模型。</p>
 <blockquote>
 <p>注：以下参考吴松芮的《基于密文的数据范围搜索算法设计与实现》</p>
 </blockquote>
-<h4 id="3-3-1基于前缀编码的搜索模型"><a href="#3-3-1基于前缀编码的搜索模型" class="headerlink" title="3.3.1基于前缀编码的搜索模型"></a>3.3.1基于前缀编码的搜索模型</h4><h5 id="3-3-1-1-建立数据索引"><a href="#3-3-1-1-建立数据索引" class="headerlink" title="3.3.1.1 建立数据索引"></a>3.3.1.1 建立数据索引</h5><p>　　建立数据索引主要包括三个步骤：</p>
+<h4 id="3-3-1基于前缀编码的搜索模型">3.3.1基于前缀编码的搜索模型</h4>
+<h5 id="3-3-1-1-建立数据索引">3.3.1.1 建立数据索引</h5>
+<p>建立数据索引主要包括三个步骤：</p>
 <ul>
 <li>1.进行前缀编码：将原始数据表示成二进制形式，并用这个二进制进行所有的前缀编码组成前缀编码集合。</li>
 <li>2.建立平衡二叉树的数据索引：将上一步中的前缀编码建立一棵平衡二叉树。</li>
-<li>3.使用h个哈希函数对数据哈希并映射到Bloom Filter。<h5 id="3-3-1-2-生成搜索范围"><a href="#3-3-1-2-生成搜索范围" class="headerlink" title="3.3.1.2 生成搜索范围"></a>3.3.1.2 生成搜索范围</h5>　　用3.3.1.1方法对数据范围进行前缀编码，将查询范围转化为最小的前缀编码集S(a,b)，使这个集合的前缀数最少，且可以表示这个范围。将S(a,b)同样进行H次哈希，生成待查数据范围。<h5 id="3-3-1-3-进行范围搜索"><a href="#3-3-1-3-进行范围搜索" class="headerlink" title="3.3.1.3 进行范围搜索"></a>3.3.1.3 进行范围搜索</h5>　　将每一个3.3.1.2生成的数据与树型索引的每一个节点进行Bloom Filter的匹配，若匹配则可判断该节点下的叶子节点中存在满足范围的数据，则继续遍历此子树直到遍历到叶子节点，将叶子节点指向的数据返回，完成搜索过程。<h4 id="3-3-2基于栅格编码的搜索模型"><a href="#3-3-2基于栅格编码的搜索模型" class="headerlink" title="3.3.2基于栅格编码的搜索模型"></a>3.3.2基于栅格编码的搜索模型</h4><h5 id="3-3-2-1-建立数据索引"><a href="#3-3-2-1-建立数据索引" class="headerlink" title="3.3.2.1 建立数据索引"></a>3.3.2.1 建立数据索引</h5></li>
-<li>1.栅格编码<br>　　对于二维数据，本文将二维数据映射到一个平面，并对这个平面进行栅格的划分，将每一个点用K级的栅格编码进行表示（本文对于栅格采用格子中心点坐标来表示此格子的编码），即完成栅格编码。</li>
-<li>2.建立平衡四叉树的数据索引,由于在二维平面中利用栅格划分，每一级栅格都将平面分为四个部分，因此我们采用平衡四叉树来存储数据的索引。建立方法与一维模型中方法相同。</li>
-<li>3.将上一步的数据索引进行哈希并映射到Bloom Filter 中，具体方法与前缀编码搜索模型方法相同。<h5 id="3-3-2-2-生成搜索范围"><a href="#3-3-2-2-生成搜索范围" class="headerlink" title="3.3.2.2 生成搜索范围"></a>3.3.2.2 生成搜索范围</h5>　　与一维数据不同，二维数据（如地理位置）搜索上传的范围一般是以客户端所在的地理位置为圆心，以r为搜索半径的一个圆形搜索范围。在客户端同样采用栅格编码的方法，将这个二维平面进行栅格的划分。这个圆形的搜索范围将包含如图中填色的这些栅格。用这些栅格来表示客户的搜索范围。<br>　　下一步，对圆形搜索范围所覆盖的栅格编码进行哈希，并对哈希后的数据进行查询。<h5 id="3-3-2-3-进行范围搜索"><a href="#3-3-2-3-进行范围搜索" class="headerlink" title="3.3.2.3 进行范围搜索"></a>3.3.2.3 进行范围搜索</h5>　　参见3.3.1.3。<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2>　　本文对系统安全所涉及的安全措施进行了简单的叙述，并对数据库加密策略及加密后的检索进行了较详细的叙述，供实施数据加密方案时进行参考。最后，希望我们的系统越来越安全！</li>
+<li>3.使用h个哈希函数对数据哈希并映射到Bloom Filter。</li>
 </ul>
+<h5 id="3-3-1-2-生成搜索范围">3.3.1.2 生成搜索范围</h5>
+<p>用3.3.1.1方法对数据范围进行前缀编码，将查询范围转化为最小的前缀编码集S(a,b)，使这个集合的前缀数最少，且可以表示这个范围。将S(a,b)同样进行H次哈希，生成待查数据范围。</p>
+<h5 id="3-3-1-3-进行范围搜索">3.3.1.3 进行范围搜索</h5>
+<p>将每一个3.3.1.2生成的数据与树型索引的每一个节点进行Bloom Filter的匹配，若匹配则可判断该节点下的叶子节点中存在满足范围的数据，则继续遍历此子树直到遍历到叶子节点，将叶子节点指向的数据返回，完成搜索过程。</p>
+<h4 id="3-3-2基于栅格编码的搜索模型">3.3.2基于栅格编码的搜索模型</h4>
+<h5 id="3-3-2-1-建立数据索引">3.3.2.1 建立数据索引</h5>
+<ul>
+<li>1.栅格编码<br>
+　　对于二维数据，本文将二维数据映射到一个平面，并对这个平面进行栅格的划分，将每一个点用K级的栅格编码进行表示（本文对于栅格采用格子中心点坐标来表示此格子的编码），即完成栅格编码。</li>
+<li>2.建立平衡四叉树的数据索引,由于在二维平面中利用栅格划分，每一级栅格都将平面分为四个部分，因此我们采用平衡四叉树来存储数据的索引。建立方法与一维模型中方法相同。</li>
+<li>3.将上一步的数据索引进行哈希并映射到Bloom Filter 中，具体方法与前缀编码搜索模型方法相同。</li>
+</ul>
+<h5 id="3-3-2-2-生成搜索范围">3.3.2.2 生成搜索范围</h5>
+<p>与一维数据不同，二维数据（如地理位置）搜索上传的范围一般是以客户端所在的地理位置为圆心，以r为搜索半径的一个圆形搜索范围。在客户端同样采用栅格编码的方法，将这个二维平面进行栅格的划分。这个圆形的搜索范围将包含如图中填色的这些栅格。用这些栅格来表示客户的搜索范围。<br>
+　　下一步，对圆形搜索范围所覆盖的栅格编码进行哈希，并对哈希后的数据进行查询。</p>
+<h5 id="3-3-2-3-进行范围搜索">3.3.2.3 进行范围搜索</h5>
+<p>参见3.3.1.3。</p>
+<h2 id="4-总结">4. 总结</h2>
+<p>本文对系统安全所涉及的安全措施进行了简单的叙述，并对数据库加密策略及加密后的检索进行了较详细的叙述，供实施数据加密方案时进行参考。最后，希望我们的系统越来越安全！</p>
 
-                    
-                    <!-- Tags Bottom -->
-                    
-
-                    <!-- Comments -->
-                    
-
-
-
-                </div>
-                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
-                    
-                    <hr class="dn-l mw4 black-50 mt5">
-                    
-                    <!-- Widget 1: About -->
-                    <div class="mt5 mt0-l">
-    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
-        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
-            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="Chunhui Guo">
-        </div>
-        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
-            My name is Chunhui guo and this is my blog.<br>I am a software engineer and CTO.<br> I currently work in Beijing And Weifang China, hit me up if you are in the region.
-        </div>
-    </article>
-</div>
-
-                    <hr class="dn-l mw4 black-50 mt5">
-                    
-                    <!-- Widget 2: Categories -->
-                    
-
-                    <!-- Widget 3: Recent Posts -->
-                    <div class="mt5 tc tl-l">
-    <h3>Recent Posts</h3>
-    
-        <p>
-            <a href="/2019/06/11/Peer-to-Peer_P2P_communication_across_middleboxes/">Peer-to-Peer (P2P) communication across middleboxe</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/23/install-nginx-redhat-5x/">在RedHat 5.6 x64下安装Nginx</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/22/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-2/">如果你的服务器不幸被黑，重要数据落入黑客手中（2）</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</a>
-        </p>
-    
-        <p>
-            <a href="/2019/04/24/create-your-blog-with-hexo/">用hexo创建你的个人博客--快速入门</a>
-        </p>
-    
-</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Footer -->
-<div class="bg-1 ph2 ph5-ns pv5">
-        <div class="mv8">
-            <div class="center tc">
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
-                            <i class="fa fa-facebook"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
-                            <i class="fa fa-dribbble"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
-                            <i class="fa fa-google-plus"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
-                            <i class="fa fa-behance"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
-                            <i class="fa fa-500px"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
-                            <i class="fa fa-envelope"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
-                            <i class="fa fa-rss"></i>
-                        </a>
-                    </div>
-                
-            </div>
-            <div class="f6 f5-ns center tc white pt5 fw3">
-                @Untitled. All right reserved | Design & Hexo <a class="link dim white" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-            </div>
-        </div>
+      <p><strong>欢迎关注公众号：程序与算法</strong></p>
+<p><img src="/images/wx-mp-png/stand.png" alt="程序与算法"></p>
     </div>
 
-<!-- After Footer -->
-<!-- Disqus Comments -->
+  </article>
+  <div class="toc-container">
+    
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-前文回顾与安全简述"><span class="toc-text">1.前文回顾与安全简述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-数据库加密的策略"><span class="toc-text">2. 数据库加密的策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-只对重要及敏感信息进行加密"><span class="toc-text">2.1.只对重要及敏感信息进行加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-对于不需要显示的数据，可以采用不可逆加密"><span class="toc-text">2.2.对于不需要显示的数据，可以采用不可逆加密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-数据库加密后的检索"><span class="toc-text">3.数据库加密后的检索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-精确查询"><span class="toc-text">3.1.精确查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-模糊查询"><span class="toc-text">3.2.模糊查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-范围查询"><span class="toc-text">3.3.范围查询</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-1基于前缀编码的搜索模型"><span class="toc-text">3.3.1基于前缀编码的搜索模型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-1-1-建立数据索引"><span class="toc-text">3.3.1.1 建立数据索引</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-1-2-生成搜索范围"><span class="toc-text">3.3.1.2 生成搜索范围</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-1-3-进行范围搜索"><span class="toc-text">3.3.1.3 进行范围搜索</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-2基于栅格编码的搜索模型"><span class="toc-text">3.3.2基于栅格编码的搜索模型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-2-1-建立数据索引"><span class="toc-text">3.3.2.1 建立数据索引</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-2-2-生成搜索范围"><span class="toc-text">3.3.2.2 生成搜索范围</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-2-3-进行范围搜索"><span class="toc-text">3.3.2.3 进行范围搜索</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li></ol>
+  </div>
 
+
+  </div>
+
+</div>
+
+<div class="copyright">
+    <span>本作品采用</span>
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">知识共享署名 4.0 国际许可协议</a>
+    <span>进行许可。 转载时请注明原文链接。</span>
+</div>
+
+
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/" rel="next" title="如果你的服务器不幸被黑，重要数据落入黑客手中（1）">
+          如果你的服务器不幸被黑，重要数据落入黑客手中（1）
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+          
+          <a href="/2019/05/23/install-nginx-redhat-5x/" rel="prev" title="在RedHat 5.6 x64下安装Nginx">
+            在RedHat 5.6 x64下安装Nginx
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+
+    </div>
+
+    
+
+  </div>
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+        <a class="bottom-item" href="http://www.w3c0.com" target="_blank">w3c</a> |
+        <a class="bottom-item" href="/">友情链接</a> |
+        <a class="bottom-item" href="https://hexo.io" target="_blank">Powered by hexo</a> |
+        <!-- <a class="bottom-item" href="https://github.com/fooying/hexo-theme-xoxo-plus" target="_blank">Theme xoxo-plus</a> | -->
+        <!-- <a class="bottom-item" href="/atom.xml">订阅</a> -->
+    </div>
+</footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+  
+<script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+</script>
 
 
 </body>
-
 </html>

@@ -1,331 +1,394 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
 
-<!-- Head tag -->
-<head><meta name="generator" content="Hexo 3.8.0">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
 
-    <!--Description-->
+  
+    <meta name="keywords" content="p2p,nat,applications," />
+  
+
+  
+    <meta name="description" content="分享程序开发、架构设计以及算法相关的知识、经验、技巧，也顺便分享一些项目管理、操作系统,系统运维、网络等相关知识。" />
+  
+
+  
+  <link rel="icon" type="image/x-icon" href="/images/footer-logo.png">
+  
+  <title>Peer-to-Peer (P2P) communication across middleboxes [ 程序与算法 - 郭春辉的博客 - ]</title>
+  
+    <!-- stylesheets list from config.yml -->
     
-        <meta name="description" content="Table of Contents
-
-
-
-
-1. Introduction
-2. Terminology
-Network address translators in turn have two main varieties:
-Basic NAT
-Network Address/Port Trans">
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
     
-
-    <!--Author-->
+      <link rel="stylesheet" href="/css/xoxo.css">
     
-        <meta name="author" content="Chunhui Guo">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="Peer-to-Peer (P2P) communication across middleboxes">
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="坚持就是胜利，剩者为王">
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article">
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary">
-    
-
-    <!-- Title -->
-    
-    <title>Peer-to-Peer (P2P) communication across middleboxes - 坚持就是胜利，剩者为王</title>
-
-    <!-- Tachyons Core CSS -->
-    <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
-    
-
-
-</head>
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
 
 
 <body>
-
-<!-- Main Content -->
-<!-- Banner -->
-<!-- Banner -->
-<div class="w-100 bg-1 ph5-ns ph3 text-light">
+  <div class="nav-container">
+    <nav class="home-menu pure-menu pure-menu-horizontal">
+  <a class="pure-menu-heading" href="/">
     
-    <nav class="db dt-l w-100 mw8 center border-box pv3">
-        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="坚持就是胜利，剩者为王">
-            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="坚持就是胜利，剩者为王">
-        </a>
-        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+    <span class="title" style="text-transform:none">程序与算法 - 郭春辉的博客 -</span>
+  </a>
+
+  <ul class="pure-menu-list clearfix">
+      
+          
             
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/" title="Home">
-                    Home
-                </a>
+              <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
             
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/archives" title="Archives">
-                    Archives
-                </a>
+          
+      
+          
             
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/2019/04/21/about/" title="About">
-                    About
-                </a>
+              <li class="pure-menu-item"><a href="/archives" class="pure-menu-link">文章</a></li>
             
-        </div>
-    </nav>
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/categories" class="pure-menu-link">分类</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+            
+          
+      
+  </ul>
+   
+</nav>
 
-    <!-- Title -->
-    <div class="w-100 mw8 center vh-40 dt">
-        <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">Peer-to-Peer (P2P) communication across middleboxes</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2019-06-11</p>
-        </div>
-    </div>
+  </div>
 
-    <!-- Icon -->
-    <div class="relative w-100 mw8 center white dn dn-m db-ns">
-        <i class="header-icon fa fa-file-text-o"></i>
-    </div>
-</div>
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <div class="post-container">
+  <article class="post" id="post">
+    <header class="post-header text-center">
+      <h1 class="title">
+        Peer-to-Peer (P2P) communication across middleboxes
+      </h1>
+      <span>
+        
+        <time class="time" datetime="2019-06-11T11:10:36.000Z">
+        2019-06-11
+      </time>
+        
+      </span>
+      <span class="slash">/</span>
+      <span class="post-meta">
+      <span class="post-tags">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/applications/" rel="tag">applications</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nat/" rel="tag">nat</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/p2p/" rel="tag">p2p</a></li></ul>
+      </span>
+    </span>
+      <span class="slash">/</span>
+      <span class="read">
+      <span id="busuanzi_value_page_pv"></span> 点击
+    </span>
+      <span class="slash">/</span>
+      <span class="read">阅读耗时 62 分钟</span>
+    </header>
 
-<!-- Content -->
-<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
-    <div class="content">
-        <div class="mw8 center">
-            <div class="cf">
-                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
-                    <!-- Tags Vertical -->
-                    
+    <div class="post-content">
+      <h1 id="1-Introduction">1.Introduction</h1>
+<p>Present-day Internet has seen ubiquitous deployment of<br>
+“middleboxes” such as network address translators(NAT), driven<br>
+primarily by the ongoing depletion of the IPv4 address space.  The<br>
+asymmetric addressing and connectivity regimes established by these<br>
+middleboxes, however, have created unique problems for peer-to-peer<br>
+(P2P) applications and  protocols, such as teleconferencing and<br>
+multiplayer on-line gaming. These issues are likely to persist even<br>
+into the IPv6 world, where NAT is often used as an IPv4 compatibility<br>
+mechanism [NAT-PT], and firewalls will still be commonplace even<br>
+after NAT is no longer required.</p>
+<p>Currently deployed middleboxes are designed primarily around the<br>
+client/server paradigm, in which relatively anonymous client machines<br>
+actively initiate connections to well-connected servers having stable<br>
+IP addresses and DNS names.  Most middleboxes implement an asymmetric</p>
+<p>communication model in which hosts on the private internal network<br>
+can initiate outgoing connections to hosts on the public network, but<br>
+external hosts cannot initiate connections to internal hosts except<br>
+as specifically configured by the middlebox’s administrator. In the<br>
+common case of NAPT, a client on the internal network does not have<br>
+a unique IP address on the public Internet, but instead must share<br>
+a single public IP address, managed by the NAPT, with other hosts<br>
+on the same private network.  The anonymity and inaccessibility of<br>
+the internal hosts behind a middlebox is not a problem for client<br>
+software such as web browsers, which only need to initiate outgoing<br>
+connections. This inaccessibility is sometimes seen as a privacy<br>
+benefit.</p>
+<p>In the peer-to-peer paradigm, however, Internet hosts that would<br>
+normally be considered “clients” need to establish communication<br>
+sessions directly with each other. The initiator and the responder<br>
+might lie behind different middleboxes with neither endpoint<br>
+having any permanent IP address or other form of public network<br>
+presence. A common on-line gaming architecture, for example,<br>
+is for the participating application hosts to contact a well-known<br>
+server for initialization and administration purposes. Subsequent<br>
+to this, the hosts establish direct connections with each other<br>
+for fast and efficient propagation of updates during game play.<br>
+Similarly, a file sharing application might contact a well-known<br>
+server for resource discovery or searching, but establish direct<br>
+connections with peer hosts for data transfer. Middleboxes create<br>
+problems for peer-to-peer connections because hosts behind a<br>
+middlebox normally have no permanently usable public ports on the<br>
+Internet to which incoming TCP or UDP connections from other peers<br>
+can be directed.  RFC 3235 [NAT-APPL] briefly addresses this issue,<br>
+but does not offer any general solutions.</p>
+<p>In this document we address the P2P/middlebox problem in two ways.<br>
+First, we summarize known methods by which P2P applications can<br>
+work around the presence of middleboxes. Second, we provide a set<br>
+of application design guidelines based on these practices to make<br>
+P2P applications operate more robustly over currently-deployed<br>
+middleboxes. Further, we provide design guidelines for future<br>
+middleboxes to allow them to support P2P applications more<br>
+effectively. Our focus is to enable immediate and wide deployment<br>
+of P2P applications requiring to traverse middleboxes.</p>
+<h1 id="2-Terminology">2. Terminology</h1>
+<p>In this section we first summarize some middlebox terms. We focus here<br>
+on the two kinds of middleboxes that commonly cause problems for P2P<br>
+applications.</p>
+<p><strong>Firewall</strong><br>
+A firewall restricts communication between a private internal<br>
+network and the public Internet, typically by dropping packets<br>
+that are deemed unauthorized.  A firewall examines but does<br>
+not modify the IP address and TCP/UDP port information in<br>
+packets crossing the boundary.</p>
+<p><strong>Network Address Translator (NAT)</strong><br>
+A network address translator not only examines but also modifies<br>
+the header information in packets flowing across the boundary,<br>
+allowing many hosts behind the NAT to share the use of a smaller<br>
+number of public IP addresses (often one).</p>
+<h2 id="Network-address-translators-in-turn-have-two-main-varieties">Network address translators in turn have two main varieties:</h2>
+<h3 id="Basic-NAT">Basic NAT</h3>
+<pre><code>  A Basic NAT maps an internal host's private IP address to a
+  public IP address without changing the TCP/UDP port
+  numbers in packets crossing the boundary.  Basic NAT is generally
+  only useful when the NAT has a pool of public IP addresses from
+  which to make address bindings on behalf of internal hosts.
+</code></pre>
+<h3 id="Network-Address-Port-Translator-NAPT">Network Address/Port Translator (NAPT)</h3>
+<pre><code>  By far the most common, a Network Address/Port Translator examines
+  and modifies both the IP address and the TCP/UDP port number
+  fields of packets crossing the boundary, allowing multiple
+  internal hosts to share a single public IP address simultaneously.
+</code></pre>
+<p>Refer to [NAT-TRAD] and [NAT-TERM] for more general information on<br>
+NAT taxonomy and terminology. Additional terms that further classify<br>
+NAPT are defined in more recent work [STUN]. When an internal host<br>
+opens an outgoing TCP or UDP session through a network address/port<br>
+translator, the NAPT assigns the session a public IP address and<br>
+port number so that subsequent response packets from the external<br>
+endpoint can be received by the NAPT, translated, and forwarded<br>
+to the internal host. The effect is that the NAPT establishes a<br>
+port binding between (private IP address, private port number) and<br>
+(public IP address, public port number). The port binding<br>
+defines the address translation the NAPT will perform for the<br>
+duration of the session.  An issue of relevance to P2P<br>
+applications is how the NAT behaves when an internal host initiates<br>
+multiple simultaneous sessions from a single (private IP, private<br>
+port) pair to multiple distinct endpoints on the external network.</p>
+<h3 id="Cone-NAT">Cone NAT</h3>
+<pre><code>  After establishing a port binding between a (private IP, private
+  port) tuple and a (public IP, public port) tuple, a cone NAT will 
+  re-use this port binding for subsequent sessions the
+  application may initiate from the same private IP address and
+  port number, for as long as at least one session using the port
+  binding remains active.
 
-                    <!-- Main Post Content -->
-                    <h1><span id="table-of-contents">Table of Contents</span></h1><div class="toc">
-
-<!-- toc -->
-
-<ul>
-<li><a href="#1-introduction">1. Introduction</a></li>
-<li><a href="#2-terminology">2. Terminology</a><ul>
-<li><a href="#network-address-translators-in-turn-have-two-main-varieties">Network address translators in turn have two main varieties:</a><ul>
-<li><a href="#basic-nat">Basic NAT</a></li>
-<li><a href="#network-addressport-translator-napt">Network Address/Port Translator (NAPT)</a></li>
-<li><a href="#cone-nat">Cone NAT</a></li>
-<li><a href="#symmetric-nat">Symmetric NAT</a></li>
-<li><a href="#full-cone-nat">Full Cone NAT</a></li>
-<li><a href="#restricted-cone-nat">Restricted Cone NAT</a></li>
-</ul>
-</li>
-<li><a href="#port-restricted-cone-nat">Port-Restricted Cone NAT</a></li>
-</ul>
-</li>
-<li><a href="#3-techniques-for-p2p-communication-over-middleboxes">3. Techniques for P2P Communication over middleboxes</a><ul>
-<li><a href="#31-relaying">3.1. Relaying</a></li>
-<li><a href="#32-connection-reversal">3.2. Connection reversal</a></li>
-<li><a href="#33-udp-hole-punching">3.3. UDP hole punching</a><ul>
-<li><a href="#331-peers-behind-different-nats">3.3.1. Peers behind different NATs</a></li>
-<li><a href="#332-peers-behind-the-same-nat">3.3.2. Peers behind the same NAT</a></li>
-<li><a href="#333-peers-separated-by-multiple-nats">3.3.3. Peers separated by multiple NATs</a></li>
-<li><a href="#334-consistent-port-bindings">3.3.4. Consistent port bindings</a></li>
-</ul>
-</li>
-<li><a href="#34-udp-port-number-prediction">3.4. UDP port number prediction</a></li>
-</ul>
-</li>
-<li><a href="#4-application-design-guidelines">4. Application design guidelines</a><ul>
-<li><a href="#41-what-works-with-p2p-middleboxes">4.1. What works with P2P middleboxes</a></li>
-<li><a href="#42-peers-behind-the-same-nat">4.2. Peers behind the same NAT</a></li>
-<li><a href="#43-peer-discovery">4.3. Peer discovery</a></li>
-<li><a href="#44-tcp-p2p-applications">4.4. TCP P2P applications</a></li>
-<li><a href="#45-use-of-midcom-protocol">4.5. Use of midcom protocol</a></li>
-</ul>
-</li>
-<li><a href="#5-nat-design-guidelines">5. NAT Design Guidelines</a><ul>
-<li><a href="#51-deprecate-the-use-of-symmetric-nats">5.1. Deprecate the use of symmetric NATs</a></li>
-<li><a href="#52-add-incremental-cone-nat-support-to-symmetric-nat-devices">5.2. Add incremental cone-NAT support to symmetric NAT devices</a></li>
-<li><a href="#53-maintain-consistent-port-bindings-for-udp-ports">5.3. Maintain consistent port bindings for UDP ports</a><ul>
-<li><a href="#531-preserving-port-numbers">5.3.1. Preserving port numbers</a></li>
-</ul>
-</li>
-<li><a href="#54-maintaining-consistent-port-bindings-for-tcp-ports">5.4. Maintaining consistent port bindings for TCP ports</a></li>
-<li><a href="#55-large-timeout-for-p2p-applications">5.5. Large timeout for P2P applications</a></li>
-<li><a href="#56-support-loopback-translation">5.6. Support loopback translation</a></li>
-</ul>
-</li>
-<li><a href="#6-security-considerations">6. Security Considerations</a><ul>
-<li><a href="#61-ip-address-aliasing">6.1. IP address aliasing</a></li>
-<li><a href="#62-denial-of-service-attacks">6.2. Denial-of-service attacks</a></li>
-<li><a href="#63-man-in-the-middle-attacks">6.3. Man-in-the-middle attacks</a></li>
-<li><a href="#64-impact-on-middlebox-security">6.4. Impact on middlebox security</a></li>
-</ul>
-</li>
-<li><a href="#7-acknowledgments">7. Acknowledgments</a></li>
-<li><a href="#8-references">8. References</a><ul>
-<li><a href="#81-normative-references">8.1. Normative references</a></li>
-<li><a href="#82-informational-references">8.2. Informational references</a></li>
-</ul>
-</li>
-<li><a href="#9-authors-address">9. Author’s Address</a></li>
-<li><a href="#status-of-this-memo">Status of this Memo</a></li>
-<li><a href="#full-copyright-statement">Full Copyright Statement</a></li>
-</ul>
-<!-- tocstop -->
-
-</div>  
-
-<h1><span id="1-introduction">1. Introduction</span></h1><p>   Present-day Internet has seen ubiquitous deployment of<br>   “middleboxes” such as network address translators(NAT), driven<br>   primarily by the ongoing depletion of the IPv4 address space.  The<br>   asymmetric addressing and connectivity regimes established by these<br>   middleboxes, however, have created unique problems for peer-to-peer<br>   (P2P) applications and  protocols, such as teleconferencing and<br>   multiplayer on-line gaming. These issues are likely to persist even<br>   into the IPv6 world, where NAT is often used as an IPv4 compatibility<br>   mechanism [NAT-PT], and firewalls will still be commonplace even<br>   after NAT is no longer required.</p>
-<p>   Currently deployed middleboxes are designed primarily around the<br>   client/server paradigm, in which relatively anonymous client machines<br>   actively initiate connections to well-connected servers having stable<br>   IP addresses and DNS names.  Most middleboxes implement an asymmetric</p>
-<p>   communication model in which hosts on the private internal network<br>   can initiate outgoing connections to hosts on the public network, but<br>   external hosts cannot initiate connections to internal hosts except<br>   as specifically configured by the middlebox’s administrator. In the<br>   common case of NAPT, a client on the internal network does not have<br>   a unique IP address on the public Internet, but instead must share<br>   a single public IP address, managed by the NAPT, with other hosts<br>   on the same private network.  The anonymity and inaccessibility of<br>   the internal hosts behind a middlebox is not a problem for client<br>   software such as web browsers, which only need to initiate outgoing<br>   connections. This inaccessibility is sometimes seen as a privacy<br>   benefit.</p>
-<p>   In the peer-to-peer paradigm, however, Internet hosts that would<br>   normally be considered “clients” need to establish communication<br>   sessions directly with each other. The initiator and the responder<br>   might lie behind different middleboxes with neither endpoint<br>   having any permanent IP address or other form of public network<br>   presence. A common on-line gaming architecture, for example,<br>   is for the participating application hosts to contact a well-known<br>   server for initialization and administration purposes. Subsequent<br>   to this, the hosts establish direct connections with each other<br>   for fast and efficient propagation of updates during game play.<br>   Similarly, a file sharing application might contact a well-known<br>   server for resource discovery or searching, but establish direct<br>   connections with peer hosts for data transfer. Middleboxes create<br>   problems for peer-to-peer connections because hosts behind a<br>   middlebox normally have no permanently usable public ports on the<br>   Internet to which incoming TCP or UDP connections from other peers<br>   can be directed.  RFC 3235 [NAT-APPL] briefly addresses this issue,<br>   but does not offer any general solutions.</p>
-<p>   In this document we address the P2P/middlebox problem in two ways.<br>   First, we summarize known methods by which P2P applications can<br>   work around the presence of middleboxes. Second, we provide a set<br>   of application design guidelines based on these practices to make<br>   P2P applications operate more robustly over currently-deployed<br>   middleboxes. Further, we provide design guidelines for future<br>   middleboxes to allow them to support P2P applications more<br>   effectively. Our focus is to enable immediate and wide deployment<br>   of P2P applications requiring to traverse middleboxes.</p>
-<h1><span id="2-terminology">2. Terminology</span></h1><p>In this section we first summarize some middlebox terms. We focus here<br>on the two kinds of middleboxes that commonly cause problems for P2P<br>applications.</p>
-<p>   <strong>Firewall</strong><br>      A firewall restricts communication between a private internal<br>      network and the public Internet, typically by dropping packets<br>      that are deemed unauthorized.  A firewall examines but does<br>      not modify the IP address and TCP/UDP port information in<br>      packets crossing the boundary.</p>
-<p>   <strong>Network Address Translator (NAT)</strong><br>      A network address translator not only examines but also modifies<br>      the header information in packets flowing across the boundary,<br>      allowing many hosts behind the NAT to share the use of a smaller<br>      number of public IP addresses (often one).</p>
-<h2><span id="network-address-translators-in-turn-have-two-main-varieties">Network address translators in turn have two main varieties:</span></h2><h3><span id="basic-nat">Basic NAT</span></h3><pre><code>A Basic NAT maps an internal host&apos;s private IP address to a
-public IP address without changing the TCP/UDP port
-numbers in packets crossing the boundary.  Basic NAT is generally
-only useful when the NAT has a pool of public IP addresses from
-which to make address bindings on behalf of internal hosts.</code></pre><h3><span id="network-addressport-translator-napt">Network Address/Port Translator (NAPT)</span></h3><pre><code>By far the most common, a Network Address/Port Translator examines
-and modifies both the IP address and the TCP/UDP port number
-fields of packets crossing the boundary, allowing multiple
-internal hosts to share a single public IP address simultaneously.</code></pre><p>   Refer to [NAT-TRAD] and [NAT-TERM] for more general information on<br>   NAT taxonomy and terminology. Additional terms that further classify<br>   NAPT are defined in more recent work [STUN]. When an internal host<br>   opens an outgoing TCP or UDP session through a network address/port<br>   translator, the NAPT assigns the session a public IP address and<br>   port number so that subsequent response packets from the external<br>   endpoint can be received by the NAPT, translated, and forwarded<br>   to the internal host. The effect is that the NAPT establishes a<br>   port binding between (private IP address, private port number) and<br>   (public IP address, public port number). The port binding<br>   defines the address translation the NAPT will perform for the<br>   duration of the session.  An issue of relevance to P2P<br>   applications is how the NAT behaves when an internal host initiates<br>   multiple simultaneous sessions from a single (private IP, private<br>   port) pair to multiple distinct endpoints on the external network.</p>
-<h3><span id="cone-nat">Cone NAT</span></h3><pre><code>After establishing a port binding between a (private IP, private
-port) tuple and a (public IP, public port) tuple, a cone NAT will 
-re-use this port binding for subsequent sessions the
-application may initiate from the same private IP address and
-port number, for as long as at least one session using the port
-binding remains active.
-
-For example, suppose Client A in the diagram below initiates two
-simultaneous outgoing sessions through a cone NAT, from the same
-internal endpoint (10.0.0.1:1234) to two different
-external servers, S1 and S2.  The cone NAT assigns just one public
-endpoint tuple, 155.99.25.11:62000, to both of these sessions,
-ensuring that the &quot;identity&quot; of the client&apos;s port is maintained
-across address translation. Since Basic NATs and firewalls do 
-not modify port numbers as packets flow across
-the middlebox, these types of middleboxes can be viewed as a
-degenerate form of Cone NAT.
-
-
-
-     Server S1                                     Server S2
-  18.181.0.31:1235                              138.76.29.7:1235
-         |                                             |
-         |                                             |
-         +----------------------+----------------------+
-                                |
-    ^  Session 1 (A-S1)  ^      |      ^  Session 2 (A-S2)  ^
-    |  18.181.0.31:1235  |      |      |  138.76.29.7:1235  |
-    v 155.99.25.11:62000 v      |      v 155.99.25.11:62000 v
-                                |
-                             Cone NAT
-                           155.99.25.11
-                                |
-    ^  Session 1 (A-S1)  ^      |      ^  Session 2 (A-S2)  ^
-    |  18.181.0.31:1235  |      |      |  138.76.29.7:1235  |
-    v   10.0.0.1:1234    v      |      v   10.0.0.1:1234    v
-                                |
-                             Client A
-                          10.0.0.1:1234</code></pre><h3><span id="symmetric-nat">Symmetric NAT</span></h3><pre><code>A symmetric NAT, in contrast, does not maintain a consistent
-port binding  between (private IP, private port) and (public IP,
-public port) across all sessions. Instead, it assigns a new
-public port to each new session.  For example, suppose Client A
-initiates two outgoing sessions from the same port as above, one
-with S1 and one with S2.  A symmetric NAT might allocate the
-public endpoint 155.99.25.11:62000 to session 1, and then allocate
-a different public endpoint 155.99.25.11:62001, when the
-application initiates session 2.  The NAT is able to differentiate
-between the two sessions for translation purposes because the
-external endpoints involved in the sessions (those of S1
-and S2) differ, even as the endpoint identity of the client 
-application is lost across the address translation boundary.
+  For example, suppose Client A in the diagram below initiates two
+  simultaneous outgoing sessions through a cone NAT, from the same
+  internal endpoint (10.0.0.1:1234) to two different
+  external servers, S1 and S2.  The cone NAT assigns just one public
+  endpoint tuple, 155.99.25.11:62000, to both of these sessions,
+  ensuring that the &quot;identity&quot; of the client's port is maintained
+  across address translation. Since Basic NATs and firewalls do 
+  not modify port numbers as packets flow across
+  the middlebox, these types of middleboxes can be viewed as a
+  degenerate form of Cone NAT.
 
 
 
-     Server S1                                     Server S2
-  18.181.0.31:1235                              138.76.29.7:1235
-         |                                             |
-         |                                             |
-         +----------------------+----------------------+
-                                |
-    ^  Session 1 (A-S1)  ^      |      ^  Session 2 (A-S2)  ^
-    |  18.181.0.31:1235  |      |      |  138.76.29.7:1235  |
-    v 155.99.25.11:62000 v      |      v 155.99.25.11:62001 v
-                                |
-                           Symmetric NAT
-                           155.99.25.11
-                                |
-    ^  Session 1 (A-S1)  ^      |      ^  Session 2 (A-S2)  ^
-    |  18.181.0.31:1235  |      |      |  138.76.29.7:1235  |
-    v   10.0.0.1:1234    v      |      v   10.0.0.1:1234    v
-                                |
-                             Client A
-                          10.0.0.1:1234</code></pre><p>   The issue of cone versus symmetric NAT behavior applies equally<br>   to TCP and UDP traffic. </p>
-<p>   Cone NAT is further classified according to how liberally the NAT<br>   accepts incoming traffic directed to an already-established (public<br>   IP, public port) pair.  This classification generally applies only to<br>   UDP traffic, since NATs and firewalls reject incoming TCP<br>   connection attempts unconditionally unless specifically configured to<br>   do otherwise.</p>
-<h3><span id="full-cone-nat">Full Cone NAT</span></h3><pre><code>After establishing a public/private port binding for a new
-outgoing session, a full cone NAT will subsequently accept
-incoming traffic to the corresponding public port from ANY
-external endpoint on the public network.  Full cone NAT is
-also sometimes called &quot;promiscuous&quot; NAT.</code></pre><h3><span id="restricted-cone-nat">Restricted Cone NAT</span></h3><pre><code>A restricted cone NAT only forwards an incoming packet directed to
-a public port if its external (source) IP address matches the
-address of a node to which the internal host has previously sent
-one or more outgoing packets.  A restricted cone NAT effectively
-refines the firewall principle of rejecting unsolicited incoming
-traffic, by restricting incoming traffic to a set of &quot;known&quot; 
-external IP addresses.</code></pre><h2><span id="port-restricted-cone-nat">Port-Restricted Cone NAT</span></h2><pre><code>A port-restricted cone NAT, in turn, only forwards an incoming
-packet if its external IP address AND port number match those of
-an external endpoint to which the internal host has previously
-sent outgoing packets.  A port-restricted cone NAT provides 
-internal nodes the same level of protection against unsolicited
-incoming traffic that a symmetric NAT does, while maintaining a
-private port&apos;s identity across translation.</code></pre><p>   Finally, in this document we define new terms for classifying<br>   the P2P-relevant behavior of middleboxes:</p>
-<p>   <strong>P2P-Application</strong><br>      P2P-application as used in this document is an application in<br>      which each P2P participant registers with a public<br>      registration server, and subsequently uses either its<br>      private endpoint, or public endpoint, or both, to establish<br>      peering sessions.</p>
-<p>   <strong>P2P-Middlebox</strong><br>      A P2P-Middlebox is middlebox that permits the traversal of<br>      P2P applications. </p>
-<p>   <strong>P2P-firewal</strong><br>      A P2P-firewall is a P2P-Middlebox that provides firewall<br>      functionality but performs no address translation.</p>
-<p>   <strong>P2P-NAT</strong><br>      A P2P-NAT is a P2P-Middlebox that provides NAT functionality, and<br>      may also provide firewall functionality. At minimum, a<br>      P2P-Middlebox must implement Cone NAT behavior for UDP traffic,<br>      allowing applications to establish robust P2P connectivity using<br>      the UDP hole punching technique.</p>
-<p>   <strong>Loopback translation</strong><br>      When a host in the private domain of a NAT device attempts to<br>      connect with another host behind the same NAT device using<br>      the public address of the host, the NAT device performs the<br>      equivalent of a “Twice-nat” translation on the packet as<br>      follows. The originating host’s private endpoint is translated<br>      into its assigned public endpoint, and the target host’s public<br>      endpoint is translated into its private endpoint, before<br>      the packet is forwarded to the target host. We refer the above<br>      translation performed by a NAT device as “Loopback translation”.</p>
-<h1><span id="3-techniques-for-p2p-communication-over-middleboxes">3. Techniques for P2P Communication over middleboxes</span></h1><p>   This section reviews in detail the currently known techniques for<br>   implementing peer-to-peer communication over existing middleboxes,<br>   from the perspective of the application or protocol designer.</p>
-<h2><span id="31-relaying">3.1. Relaying</span></h2><p>   The most reliable, but least efficient, method of implementing peer-<br>   to-peer communication in the presence of a middlebox is to make the<br>   peer-to-peer communication look to the network like client/server<br>   communication through relaying.  For example, suppose two client<br>   hosts, A and B, have each initiated TCP or UDP connections with a<br>   well-known server S having a permanent IP address.  The clients<br>   reside on separate private networks, however, and their respective<br>   middleboxes prevent either client from directly initiating a<br>   connection to the other.</p>
-<pre><code>                       Server S
-                          |
-                          |
-   +----------------------+----------------------+
-   |                                             |
- NAT A                                         NAT B
-   |                                             |
-   |                                             |
-Client A                                      Client B</code></pre><p>   Instead of attempting a direct connection, the two clients can simply<br>   use the server S to relay messages between them.  For example, to<br>   send a message to client B, client A simply sends the message to<br>   server S along its already-established client/server connection, and<br>   server S then sends the message on to client B using its existing<br>   client/server connection with B.</p>
-<p>   This method has the advantage that it will always work as long as<br>   both clients have connectivity to the server.  Its obvious<br>   disadvantages are that it consumes the server’s processing power and<br>   network bandwidth unnecessarily, and communication latency between<br>   the two clients is likely to be increased even if the server is well-<br>   connected.  The TURN protocol [TURN] defines a method of implementing<br>   relaying in a relatively secure fashion.</p>
-<h2><span id="32-connection-reversal">3.2. Connection reversal</span></h2><p>   The second technique works if only one of the clients is behind a<br>   middlebox.  For example, suppose client A is behind a NAT but client<br>   B has a globally routable IP address, as in the following diagram:</p>
+       Server S1                                     Server S2
+    18.181.0.31:1235                              138.76.29.7:1235
+           |                                             |
+           |                                             |
+           +----------------------+----------------------+
+                                  |
+      ^  Session 1 (A-S1)  ^      |      ^  Session 2 (A-S2)  ^
+      |  18.181.0.31:1235  |      |      |  138.76.29.7:1235  |
+      v 155.99.25.11:62000 v      |      v 155.99.25.11:62000 v
+                                  |
+                               Cone NAT
+                             155.99.25.11
+                                  |
+      ^  Session 1 (A-S1)  ^      |      ^  Session 2 (A-S2)  ^
+      |  18.181.0.31:1235  |      |      |  138.76.29.7:1235  |
+      v   10.0.0.1:1234    v      |      v   10.0.0.1:1234    v
+                                  |
+                               Client A
+                            10.0.0.1:1234
+</code></pre>
+<h3 id="Symmetric-NAT">Symmetric NAT</h3>
+<pre><code>  A symmetric NAT, in contrast, does not maintain a consistent
+  port binding  between (private IP, private port) and (public IP,
+  public port) across all sessions. Instead, it assigns a new
+  public port to each new session.  For example, suppose Client A
+  initiates two outgoing sessions from the same port as above, one
+  with S1 and one with S2.  A symmetric NAT might allocate the
+  public endpoint 155.99.25.11:62000 to session 1, and then allocate
+  a different public endpoint 155.99.25.11:62001, when the
+  application initiates session 2.  The NAT is able to differentiate
+  between the two sessions for translation purposes because the
+  external endpoints involved in the sessions (those of S1
+  and S2) differ, even as the endpoint identity of the client 
+  application is lost across the address translation boundary.
+
+
+
+       Server S1                                     Server S2
+    18.181.0.31:1235                              138.76.29.7:1235
+           |                                             |
+           |                                             |
+           +----------------------+----------------------+
+                                  |
+      ^  Session 1 (A-S1)  ^      |      ^  Session 2 (A-S2)  ^
+      |  18.181.0.31:1235  |      |      |  138.76.29.7:1235  |
+      v 155.99.25.11:62000 v      |      v 155.99.25.11:62001 v
+                                  |
+                             Symmetric NAT
+                             155.99.25.11
+                                  |
+      ^  Session 1 (A-S1)  ^      |      ^  Session 2 (A-S2)  ^
+      |  18.181.0.31:1235  |      |      |  138.76.29.7:1235  |
+      v   10.0.0.1:1234    v      |      v   10.0.0.1:1234    v
+                                  |
+                               Client A
+                            10.0.0.1:1234
+</code></pre>
+<p>The issue of cone versus symmetric NAT behavior applies equally<br>
+to TCP and UDP traffic.</p>
+<p>Cone NAT is further classified according to how liberally the NAT<br>
+accepts incoming traffic directed to an already-established (public<br>
+IP, public port) pair.  This classification generally applies only to<br>
+UDP traffic, since NATs and firewalls reject incoming TCP<br>
+connection attempts unconditionally unless specifically configured to<br>
+do otherwise.</p>
+<h3 id="Full-Cone-NAT">Full Cone NAT</h3>
+<pre><code>  After establishing a public/private port binding for a new
+  outgoing session, a full cone NAT will subsequently accept
+  incoming traffic to the corresponding public port from ANY
+  external endpoint on the public network.  Full cone NAT is
+  also sometimes called &quot;promiscuous&quot; NAT.
+</code></pre>
+<h3 id="Restricted-Cone-NAT">Restricted Cone NAT</h3>
+<pre><code>  A restricted cone NAT only forwards an incoming packet directed to
+  a public port if its external (source) IP address matches the
+  address of a node to which the internal host has previously sent
+  one or more outgoing packets.  A restricted cone NAT effectively
+  refines the firewall principle of rejecting unsolicited incoming
+  traffic, by restricting incoming traffic to a set of &quot;known&quot; 
+  external IP addresses.
+</code></pre>
+<h2 id="Port-Restricted-Cone-NAT">Port-Restricted Cone NAT</h2>
+<pre><code>  A port-restricted cone NAT, in turn, only forwards an incoming
+  packet if its external IP address AND port number match those of
+  an external endpoint to which the internal host has previously
+  sent outgoing packets.  A port-restricted cone NAT provides 
+  internal nodes the same level of protection against unsolicited
+  incoming traffic that a symmetric NAT does, while maintaining a
+  private port's identity across translation.
+</code></pre>
+<p>Finally, in this document we define new terms for classifying<br>
+the P2P-relevant behavior of middleboxes:</p>
+<p><strong>P2P-Application</strong><br>
+P2P-application as used in this document is an application in<br>
+which each P2P participant registers with a public<br>
+registration server, and subsequently uses either its<br>
+private endpoint, or public endpoint, or both, to establish<br>
+peering sessions.</p>
+<p><strong>P2P-Middlebox</strong><br>
+A P2P-Middlebox is middlebox that permits the traversal of<br>
+P2P applications.</p>
+<p><strong>P2P-firewal</strong><br>
+A P2P-firewall is a P2P-Middlebox that provides firewall<br>
+functionality but performs no address translation.</p>
+<p><strong>P2P-NAT</strong><br>
+A P2P-NAT is a P2P-Middlebox that provides NAT functionality, and<br>
+may also provide firewall functionality. At minimum, a<br>
+P2P-Middlebox must implement Cone NAT behavior for UDP traffic,<br>
+allowing applications to establish robust P2P connectivity using<br>
+the UDP hole punching technique.</p>
+<p><strong>Loopback translation</strong><br>
+When a host in the private domain of a NAT device attempts to<br>
+connect with another host behind the same NAT device using<br>
+the public address of the host, the NAT device performs the<br>
+equivalent of a “Twice-nat” translation on the packet as<br>
+follows. The originating host’s private endpoint is translated<br>
+into its assigned public endpoint, and the target host’s public<br>
+endpoint is translated into its private endpoint, before<br>
+the packet is forwarded to the target host. We refer the above<br>
+translation performed by a NAT device as “Loopback translation”.</p>
+<h1 id="3-Techniques-for-P2P-Communication-over-middleboxes">3. Techniques for P2P Communication over middleboxes</h1>
+<p>This section reviews in detail the currently known techniques for<br>
+implementing peer-to-peer communication over existing middleboxes,<br>
+from the perspective of the application or protocol designer.</p>
+<h2 id="3-1-Relaying">3.1. Relaying</h2>
+<p>The most reliable, but least efficient, method of implementing peer-<br>
+to-peer communication in the presence of a middlebox is to make the<br>
+peer-to-peer communication look to the network like client/server<br>
+communication through relaying.  For example, suppose two client<br>
+hosts, A and B, have each initiated TCP or UDP connections with a<br>
+well-known server S having a permanent IP address.  The clients<br>
+reside on separate private networks, however, and their respective<br>
+middleboxes prevent either client from directly initiating a<br>
+connection to the other.</p>
+<pre><code>                            Server S
+                               |
+                               |
+        +----------------------+----------------------+
+        |                                             |
+      NAT A                                         NAT B
+        |                                             |
+        |                                             |
+     Client A                                      Client B
+</code></pre>
+<p>Instead of attempting a direct connection, the two clients can simply<br>
+use the server S to relay messages between them.  For example, to<br>
+send a message to client B, client A simply sends the message to<br>
+server S along its already-established client/server connection, and<br>
+server S then sends the message on to client B using its existing<br>
+client/server connection with B.</p>
+<p>This method has the advantage that it will always work as long as<br>
+both clients have connectivity to the server.  Its obvious<br>
+disadvantages are that it consumes the server’s processing power and<br>
+network bandwidth unnecessarily, and communication latency between<br>
+the two clients is likely to be increased even if the server is well-<br>
+connected.  The TURN protocol [TURN] defines a method of implementing<br>
+relaying in a relatively secure fashion.</p>
+<h2 id="3-2-Connection-reversal">3.2. Connection reversal</h2>
+<p>The second technique works if only one of the clients is behind a<br>
+middlebox.  For example, suppose client A is behind a NAT but client<br>
+B has a globally routable IP address, as in the following diagram:</p>
 <pre><code>                            Server S
                         18.181.0.31:1235
                                |
@@ -337,13 +400,69 @@ Client A                                      Client B</code></pre><p>   Instead
         |                                             |
         |                                             |
      Client A                                      Client B
-  10.0.0.1:1234                               138.76.29.7:1234</code></pre><p>   Client A has private IP address 10.0.0.1, and the application is<br>   using TCP port 1234.  This client has established a connection with<br>   server S at public IP address 18.181.0.31 and port 1235.  NAT A has<br>   assigned TCP port 62000, at its own public IP address 155.99.25.11,<br>   to serve as the temporary public endpoint address for A’s session<br>   with S: therefore, server S believes that client A is at IP address<br>   155.99.25.11 using port 62000.  Client B, however, has its own<br>   permanent IP address, 138.76.29.7, and the peer-to-peer application<br>   on B is accepting TCP connections at port 1234.</p>
-<p>   Now suppose client B would like to initiate a peer-to-peer<br>   communication session with client A.  B might first attempt to<br>   contact client A either at the address client A believes itself to<br>   have, namely 10.0.0.1:1234, or at the address of A as observed by<br>   server S, namely 155.99.25.11:62000.  In either case, however, the<br>   connection will fail.  In the first case, traffic directed to IP<br>   address 10.0.0.1 will simply be dropped by the network because<br>   10.0.0.1 is not a publicly routable IP address.  In the second case,<br>   the TCP SYN request from B will arrive at NAT A directed to port<br>   62000, but NAT A will reject the connection request because only<br>   outgoing connections are allowed.</p>
-<p>   After attempting and failing to establish a direct connection to A,<br>   client B can use server S to relay a request to client A to initiate<br>   a “reversed” connection to client B.  Client A, upon receiving this<br>   relayed request through S, opens a TCP connection to client B at B’s<br>   public IP address and port number.  NAT A allows the connection to<br>   proceed because it is originating inside the firewall, and client B<br>   can receive the connection because it is not behind a middlebox.</p>
-<p>   A variety of current peer-to-peer systems implement this technique.<br>   Its main limitation, of course, is that it only works as long as only<br>   one of the communicating peers is behind a NAT: in the increasingly<br>   common case where both peers are behind NATs, the method fails.<br>   Because connection reversal is not a general solution to the problem,<br>   it is NOT recommended as a primary strategy.  Applications may choose<br>   to attempt connection reversal, but should be able to fall back<br>   automatically on another mechanism such as relaying if neither a<br>   “forward” nor a “reverse” connection can be established.</p>
-<h2><span id="33-udp-hole-punching">3.3. UDP hole punching</span></h2><p>   The third technique, and the one of primary interest in this<br>   document, is widely known as “UDP Hole Punching.”  UDP hole punching<br>   relies on the properties of common firewalls and cone NATs to allow<br>   appropriately designed peer-to-peer applications to “punch holes”<br>   through the middlebox and establish direct connectivity with each<br>   other, even when both communicating hosts may lie behind middleboxes.<br>   This technique was mentioned briefly in section 5.1 of RFC 3027 [NAT-<br>   PROT], and has been informally described elsewhere on the Internet<br>   [KEGEL] and used in some recent protocols [TEREDO, ICE].  As the name<br>   implies, unfortunately, this technique works reliably only with UDP.</p>
-<p>   We will consider two specific scenarios, and how applications can be<br>   designed to handle both of them gracefully.  In the first situation,<br>   representing the common case, two clients desiring direct peer-to-<br>   peer communication reside behind two different NATs.  In the second,<br>   the two clients actually reside behind the same NAT, but do not<br>   necessarily know that they do.</p>
-<h3><span id="331-peers-behind-different-nats">3.3.1. Peers behind different NATs</span></h3><p>   Suppose clients A and B both have private IP addresses and lie behind<br>   different network address translators.  The peer-to-peer application<br>   running on clients A and B and on server S each use UDP port 1234.  A<br>   and B have each initiated UDP communication sessions with server S,<br>   causing NAT A to assign its own public UDP port 62000 for A’s session<br>   with S, and causing NAT B to assign its port 31000 to B’s session<br>   with S, respectively.</p>
+  10.0.0.1:1234                               138.76.29.7:1234
+</code></pre>
+<p>Client A has private IP address 10.0.0.1, and the application is<br>
+using TCP port 1234.  This client has established a connection with<br>
+server S at public IP address 18.181.0.31 and port 1235.  NAT A has<br>
+assigned TCP port 62000, at its own public IP address 155.99.25.11,<br>
+to serve as the temporary public endpoint address for A’s session<br>
+with S: therefore, server S believes that client A is at IP address<br>
+155.99.25.11 using port 62000.  Client B, however, has its own<br>
+permanent IP address, 138.76.29.7, and the peer-to-peer application<br>
+on B is accepting TCP connections at port 1234.</p>
+<p>Now suppose client B would like to initiate a peer-to-peer<br>
+communication session with client A.  B might first attempt to<br>
+contact client A either at the address client A believes itself to<br>
+have, namely 10.0.0.1:1234, or at the address of A as observed by<br>
+server S, namely 155.99.25.11:62000.  In either case, however, the<br>
+connection will fail.  In the first case, traffic directed to IP<br>
+address 10.0.0.1 will simply be dropped by the network because<br>
+10.0.0.1 is not a publicly routable IP address.  In the second case,<br>
+the TCP SYN request from B will arrive at NAT A directed to port<br>
+62000, but NAT A will reject the connection request because only<br>
+outgoing connections are allowed.</p>
+<p>After attempting and failing to establish a direct connection to A,<br>
+client B can use server S to relay a request to client A to initiate<br>
+a “reversed” connection to client B.  Client A, upon receiving this<br>
+relayed request through S, opens a TCP connection to client B at B’s<br>
+public IP address and port number.  NAT A allows the connection to<br>
+proceed because it is originating inside the firewall, and client B<br>
+can receive the connection because it is not behind a middlebox.</p>
+<p>A variety of current peer-to-peer systems implement this technique.<br>
+Its main limitation, of course, is that it only works as long as only<br>
+one of the communicating peers is behind a NAT: in the increasingly<br>
+common case where both peers are behind NATs, the method fails.<br>
+Because connection reversal is not a general solution to the problem,<br>
+it is NOT recommended as a primary strategy.  Applications may choose<br>
+to attempt connection reversal, but should be able to fall back<br>
+automatically on another mechanism such as relaying if neither a<br>
+“forward” nor a “reverse” connection can be established.</p>
+<h2 id="3-3-UDP-hole-punching">3.3. UDP hole punching</h2>
+<p>The third technique, and the one of primary interest in this<br>
+document, is widely known as “UDP Hole Punching.”  UDP hole punching<br>
+relies on the properties of common firewalls and cone NATs to allow<br>
+appropriately designed peer-to-peer applications to “punch holes”<br>
+through the middlebox and establish direct connectivity with each<br>
+other, even when both communicating hosts may lie behind middleboxes.<br>
+This technique was mentioned briefly in section 5.1 of RFC 3027 [NAT-<br>
+PROT], and has been informally described elsewhere on the Internet<br>
+[KEGEL] and used in some recent protocols [TEREDO, ICE].  As the name<br>
+implies, unfortunately, this technique works reliably only with UDP.</p>
+<p>We will consider two specific scenarios, and how applications can be<br>
+designed to handle both of them gracefully.  In the first situation,<br>
+representing the common case, two clients desiring direct peer-to-<br>
+peer communication reside behind two different NATs.  In the second,<br>
+the two clients actually reside behind the same NAT, but do not<br>
+necessarily know that they do.</p>
+<h3 id="3-3-1-Peers-behind-different-NATs">3.3.1. Peers behind different NATs</h3>
+<p>Suppose clients A and B both have private IP addresses and lie behind<br>
+different network address translators.  The peer-to-peer application<br>
+running on clients A and B and on server S each use UDP port 1234.  A<br>
+and B have each initiated UDP communication sessions with server S,<br>
+causing NAT A to assign its own public UDP port 62000 for A’s session<br>
+with S, and causing NAT B to assign its port 31000 to B’s session<br>
+with S, respectively.</p>
 <pre><code>                            Server S
                         18.181.0.31:1234
                                |
@@ -356,24 +475,103 @@ Client A                                      Client B</code></pre><p>   Instead
         |                                             |
         |                                             |
      Client A                                      Client B
-  10.0.0.1:1234                                 10.1.1.3:1234</code></pre><p>   Now suppose that client A wants to establish a UDP communication<br>   session directly with client B.  If A simply starts sending UDP<br>   messages to B’s public address, 138.76.29.7:31000, then NAT B will<br>   typically discard these incoming messages (unless it is a full cone<br>   NAT), because the source address and port number does not match those<br>   of S, with which the original outgoing session was established.<br>   Similarly, if B simply starts sending UDP messages to A’s public<br>   address, then NAT A will typically discard these messages.</p>
-<p>   Suppose A starts sending UDP messages to B’s public address, however,<br>   and simultaneously relays a request through server S to B, asking B<br>   to start sending UDP messages to A’s public address.  A’s outgoing<br>   messages directed to B’s public address (138.76.29.7:31000) cause NAT<br>   A to open up a new communication session between A’s private address<br>   and B’s public address.  At the same time, B’s messages to A’s public<br>   address (155.99.25.11:62000) cause NAT B to open up a new<br>   communication session between B’s private address and A’s public<br>   address.  Once the new UDP sessions have been opened up in each<br>   direction, client A and B can communicate with each other directly<br>   without further burden on the “introduction” server S.</p>
-<p>   The UDP hole punching technique has several useful properties.  Once<br>   a direct peer-to-peer UDP connection has been established between two<br>   clients behind middleboxes, either party on that connection can in<br>   turn take over the role of “introducer” and help the other party<br>   establish peer-to-peer connections with additional peers, minimizing<br>   the load on the initial introduction server S.  The application does<br>   not need to attempt to detect explicitly what kind of middlebox it is<br>   behind, if any [STUN], since the procedure above will establish peer-<br>   to-peer communication channels equally well if either or both clients<br>   do not happen to be behind a middlebox.  The hole punching technique<br>   even works automatically with multiple NATs, where one or both<br>   clients are removed from the public Internet via two or more levels<br>   of address translation.</p>
-<h3><span id="332-peers-behind-the-same-nat">3.3.2. Peers behind the same NAT</span></h3><p>   Now consider the scenario in which the two clients (probably<br>   unknowingly) happen to reside behind the same NAT, and are therefore<br>   located in the same private IP address space.  Client A has<br>   established a UDP session with server S, to which the common NAT has<br>   assigned public port number 62000.  Client B has similarly<br>   established a session with S, to which the NAT has assigned public<br>   port number 62001.</p>
-<pre><code>                          Server S
-                      18.181.0.31:1234
-                             |
-                             |
-                            NAT
-                   A-S 155.99.25.11:62000
-                   B-S 155.99.25.11:62001
-                             |
-      +----------------------+----------------------+
-      |                                             |
-   Client A                                      Client B
-10.0.0.1:1234                                 10.1.1.3:1234</code></pre><p>   Suppose that A and B use the UDP hole punching technique as outlined<br>   above to establish a communication channel using server S as an<br>   introducer.  Then A and B will learn each other’s public IP addresses<br>   and port numbers as observed by server S, and start sending each<br>   other messages at those public addresses.  The two clients will be<br>   able to communicate with each other this way as long as the NAT<br>   allows hosts on the internal network to open translated UDP sessions<br>   with other internal hosts and not just with external hosts. We refer<br>   to this situation as “loopback translation,” because packets arriving<br>   at the NAT from the private network are translated and then “looped<br>   back” to the private network rather than being passed through to the<br>   public network.  For example, when A sends a UDP packet to B’s public<br>   address, the packet initially has a source IP address and port number<br>   of 10.0.0.1:124 and a destination of 155.99.25.11:62001.  The NAT<br>   receives this packet, translates it to have a source of<br>   155.99.25.11:62000 (A’s public address) and a destination of<br>   10.1.1.3:1234, and then forwards it on to B.  Even if loopback<br>   translation is supported by the NAT, this translation and forwarding<br>   step is obviously unnecessary in this situation, and is likely to add<br>   latency to the dialog between A and B as well as burdening the NAT.</p>
-<p>   The solution to this problem is straightforward, however.  When A and<br>   B initially exchange address information through server S, they<br>   should include their own IP addresses and port numbers as “observed”<br>   by themselves, as well as their addresses as observed by S.  The<br>   clients then simultaneously start sending packets to each other at<br>   each of the alternative addresses they know about, and use the first<br>   address that leads to successful communication.  If the two clients<br>   are behind the same NAT, then the packets directed to their private<br>   addresses are likely to arrive first, resulting in a direct<br>   communication channel not involving the NAT.  If the two clients are<br>   behind different NATs, then the packets directed to their private<br>   addresses will fail to reach each other at all, but the clients will<br>   hopefully establish connectivity using their respective public<br>   addresses.  It is important that these packets be authenticated in<br>   some way, however, since in the case of different NATs it is entirely<br>   possible for A’s messages directed at B’s private address to reach<br>   some other, unrelated node on A’s private network, or vice versa.</p>
-<h3><span id="333-peers-separated-by-multiple-nats">3.3.3. Peers separated by multiple NATs</span></h3><p>   In some topologies involving multiple NAT devices, it is not<br>   possible for two clients to establish an “optimal” P2P route between<br>   them without specific knowledge of the topology.  Consider for<br>   example the following situation.</p>
+  10.0.0.1:1234                                 10.1.1.3:1234
+</code></pre>
+<p>Now suppose that client A wants to establish a UDP communication<br>
+session directly with client B.  If A simply starts sending UDP<br>
+messages to B’s public address, 138.76.29.7:31000, then NAT B will<br>
+typically discard these incoming messages (unless it is a full cone<br>
+NAT), because the source address and port number does not match those<br>
+of S, with which the original outgoing session was established.<br>
+Similarly, if B simply starts sending UDP messages to A’s public<br>
+address, then NAT A will typically discard these messages.</p>
+<p>Suppose A starts sending UDP messages to B’s public address, however,<br>
+and simultaneously relays a request through server S to B, asking B<br>
+to start sending UDP messages to A’s public address.  A’s outgoing<br>
+messages directed to B’s public address (138.76.29.7:31000) cause NAT<br>
+A to open up a new communication session between A’s private address<br>
+and B’s public address.  At the same time, B’s messages to A’s public<br>
+address (155.99.25.11:62000) cause NAT B to open up a new<br>
+communication session between B’s private address and A’s public<br>
+address.  Once the new UDP sessions have been opened up in each<br>
+direction, client A and B can communicate with each other directly<br>
+without further burden on the “introduction” server S.</p>
+<p>The UDP hole punching technique has several useful properties.  Once<br>
+a direct peer-to-peer UDP connection has been established between two<br>
+clients behind middleboxes, either party on that connection can in<br>
+turn take over the role of “introducer” and help the other party<br>
+establish peer-to-peer connections with additional peers, minimizing<br>
+the load on the initial introduction server S.  The application does<br>
+not need to attempt to detect explicitly what kind of middlebox it is<br>
+behind, if any [STUN], since the procedure above will establish peer-<br>
+to-peer communication channels equally well if either or both clients<br>
+do not happen to be behind a middlebox.  The hole punching technique<br>
+even works automatically with multiple NATs, where one or both<br>
+clients are removed from the public Internet via two or more levels<br>
+of address translation.</p>
+<h3 id="3-3-2-Peers-behind-the-same-NAT">3.3.2. Peers behind the same NAT</h3>
+<p>Now consider the scenario in which the two clients (probably<br>
+unknowingly) happen to reside behind the same NAT, and are therefore<br>
+located in the same private IP address space.  Client A has<br>
+established a UDP session with server S, to which the common NAT has<br>
+assigned public port number 62000.  Client B has similarly<br>
+established a session with S, to which the NAT has assigned public<br>
+port number 62001.</p>
+<pre><code>                            Server S
+                        18.181.0.31:1234
+                               |
+                               |
+                              NAT
+                     A-S 155.99.25.11:62000
+                     B-S 155.99.25.11:62001
+                               |
+        +----------------------+----------------------+
+        |                                             |
+     Client A                                      Client B
+  10.0.0.1:1234                                 10.1.1.3:1234
+</code></pre>
+<p>Suppose that A and B use the UDP hole punching technique as outlined<br>
+above to establish a communication channel using server S as an<br>
+introducer.  Then A and B will learn each other’s public IP addresses<br>
+and port numbers as observed by server S, and start sending each<br>
+other messages at those public addresses.  The two clients will be<br>
+able to communicate with each other this way as long as the NAT<br>
+allows hosts on the internal network to open translated UDP sessions<br>
+with other internal hosts and not just with external hosts. We refer<br>
+to this situation as “loopback translation,” because packets arriving<br>
+at the NAT from the private network are translated and then “looped<br>
+back” to the private network rather than being passed through to the<br>
+public network.  For example, when A sends a UDP packet to B’s public<br>
+address, the packet initially has a source IP address and port number<br>
+of 10.0.0.1:124 and a destination of 155.99.25.11:62001.  The NAT<br>
+receives this packet, translates it to have a source of<br>
+155.99.25.11:62000 (A’s public address) and a destination of<br>
+10.1.1.3:1234, and then forwards it on to B.  Even if loopback<br>
+translation is supported by the NAT, this translation and forwarding<br>
+step is obviously unnecessary in this situation, and is likely to add<br>
+latency to the dialog between A and B as well as burdening the NAT.</p>
+<p>The solution to this problem is straightforward, however.  When A and<br>
+B initially exchange address information through server S, they<br>
+should include their own IP addresses and port numbers as “observed”<br>
+by themselves, as well as their addresses as observed by S.  The<br>
+clients then simultaneously start sending packets to each other at<br>
+each of the alternative addresses they know about, and use the first<br>
+address that leads to successful communication.  If the two clients<br>
+are behind the same NAT, then the packets directed to their private<br>
+addresses are likely to arrive first, resulting in a direct<br>
+communication channel not involving the NAT.  If the two clients are<br>
+behind different NATs, then the packets directed to their private<br>
+addresses will fail to reach each other at all, but the clients will<br>
+hopefully establish connectivity using their respective public<br>
+addresses.  It is important that these packets be authenticated in<br>
+some way, however, since in the case of different NATs it is entirely<br>
+possible for A’s messages directed at B’s private address to reach<br>
+some other, unrelated node on A’s private network, or vice versa.</p>
+<h3 id="3-3-3-Peers-separated-by-multiple-NATs">3.3.3. Peers separated by multiple NATs</h3>
+<p>In some topologies involving multiple NAT devices, it is not<br>
+possible for two clients to establish an “optimal” P2P route between<br>
+them without specific knowledge of the topology.  Consider for<br>
+example the following situation.</p>
 <pre><code>                            Server S
                         18.181.0.31:1234
                                |
@@ -390,228 +588,815 @@ Client A                                      Client B</code></pre><p>   Instead
         |                                             |
         |                                             |
      Client A                                      Client B
-  10.0.0.1:1234                                 10.1.1.3:1234</code></pre><p>   Suppose NAT X is a large industrial NAT deployed by an internet<br>   service provider (ISP) to multiplex many customers onto a few public<br>   IP addresses, and NATs A and B are small consumer NAT gateways<br>   deployed independently by two of the ISP’s customers to multiplex<br>   their private home networks onto their respective ISP-provided IP<br>   addresses.  Only server S and NAT X have globally routable IP<br>   addresses; the “public” IP addresses used by NAT A and NAT B are<br>   actually private to the ISP’s addressing realm, while client A’s and<br>   B’s addresses in turn are private to the addressing realms of NAT A<br>   and B, respectively.  Each client initiates an outgoing connection to<br>   server S as before, causing NATs A and B each to create a single<br>   public/private translation, and causing NAT X to establish a<br>   public/private translation for each session.</p>
-<p>   Now suppose clients A and B attempt to establish a direct peer-to-<br>   peer UDP connection.  The optimal method would be for client A to<br>   send messages to client B’s public address at NAT B,<br>   192.168.1.2:31000 in the ISP’s addressing realm, and for client B to<br>   send messages to A’s public address at NAT B, namely<br>   192.168.1.1:30000.  Unfortunately, A and B have no way to learn these<br>   addresses, because server S only sees the “global” public addresses<br>   of the clients, 155.99.25.11:62000 and 155.99.25.11:62001.  Even if A<br>   and B had some way to learn these addresses, there is still no<br>   guarantee that they would be usable because the address assignments<br>   in the ISP’s private addressing realm might conflict with unrelated<br>   address assignments in the clients’ private realms.  The clients<br>   therefore have no choice but to use their global public addresses as<br>   seen by S for their P2P communication, and rely on NAT X to provide<br>   loopback translation.</p>
-<h3><span id="334-consistent-port-bindings">3.3.4. Consistent port bindings</span></h3><p>   The hole punching technique has one main caveat: it works only if<br>   both NATs are cone NATs (or non-NAT firewalls), which maintain a<br>   consistent port binding between a given (private IP, private UDP)<br>   pair and a (public IP, public UDP) pair for as long as that UDP port<br>   is in use.  Assigning a new public port for each new session, as a<br>   symmetric NAT does, makes it impossible for a UDP application to<br>   reuse an already-established translation for communication with<br>   different external destinations.  Since cone NATs are the most<br>   widespread, the UDP hole punching technique is fairly broadly<br>   applicable; nevertheless a substantial fraction of deployed NATs are<br>   symmetric and do not support the technique.</p>
-<h2><span id="34-udp-port-number-prediction">3.4. UDP port number prediction</span></h2><p>   A variant of the UDP hole punching technique discussed above exists<br>   that allows peer-to-peer UDP sessions to be created in the presence<br>   of some symmetric NATs.  This method is sometimes called the “N+1”<br>   technique [BIDIR] and is explored in detail by Takeda [SYM-STUN].<br>   The method works by analyzing the behavior of the NAT and attempting<br>   to predict the public port numbers it will assign to future sessions.<br>   Consider again the situation in which two clients, A and B, each<br>   behind a separate NAT, have each established UDP connections with a<br>   permanently addressable server S:</p>
-<pre><code>                           Server S
-                       18.181.0.31:1234
-                              |
-                              |
-       +----------------------+----------------------+
-       |                                             |
-Symmetric NAT A                               Symmetric NAT B</code></pre><p>   A-S 155.99.25.11:62000                        B-S 138.76.29.7:31000<br>              |                                             |<br>              |                                             |<br>           Client A                                      Client B<br>        10.0.0.1:1234                                 10.1.1.3:1234</p>
-<p>   NAT A has assigned its own UDP port 62000 to the communication<br>   session between A and S, and NAT B has assigned its port 31000 to the<br>   session between B and S.  By communicating through server S, A and B<br>   learn each other’s public IP addresses and port numbers as observed<br>   by S.  Client A now starts sending UDP messages to port 31001 at<br>   address 138.76.29.7 (note the port number increment), and client B<br>   simultaneously starts sending messages to port 62001 at address<br>   155.99.25.11.  If NATs A and B assign port numbers to new sessions<br>   sequentially, and if not much time has passed since the A-S and B-S<br>   sessions were initiated, then a working bi-directional communication<br>   channel between A and B should result.  A’s messages to B cause NAT A<br>   to open up a new session, to which NAT A will (hopefully) assign<br>   public port number 62001, because 62001 is next in sequence after the<br>   port number 62000 it previously assigned to the session between A and<br>   S.  Similarly, B’s messages to A will cause NAT B to open a new<br>   session, to which it will (hopefully) assign port number 31001.  If<br>   both clients have correctly guessed the port numbers each NAT assigns<br>   to the new sessions, then a bi-directional UDP communication channel<br>   will have been established as shown below.</p>
-<pre><code>                      Server S
-                  18.181.0.31:1234
-                         |
-                         |
-  +----------------------+----------------------+
-  |                                             |
-NAT A                                         NAT B</code></pre><p>   A-S 155.99.25.11:62000                        B-S 138.76.29.7:31000<br>   A-B 155.99.25.11:62001                        B-A 138.76.29.7:31001<br>              |                                             |<br>              |                                             |<br>           Client A                                      Client B<br>        10.0.0.1:1234                                 10.1.1.3:1234</p>
-<p>   Obviously there are many things that can cause this trick to fail.<br>   If the predicted port number at either NAT already happens to be in<br>   use by an unrelated session, then the NAT will skip over that port<br>   number and the connection attempt will fail.  If either NAT sometimes<br>   or always chooses port numbers non-sequentially, then the trick will<br>   fail.  If a different client behind NAT A (or B respectively) opens<br>   up a new outgoing UDP connection to any external destination after A<br>   (B) establishes its connection with S but before sending its first<br>   message to B (A), then the unrelated client will inadvertently<br>   “steal” the desired port number.  This trick is therefore much less<br>   likely to work when either NAT involved is under load.</p>
-<p>   Since in practice a P2P application implementing this trick would<br>   still need to work if the NATs are cone NATs, or if one is a cone NAT<br>   and the other is a symmetric NAT, the application would need to<br>   detect beforehand what kind of NAT is involved on either end [STUN]<br>   and modify its behavior accordingly, increasing the complexity of the<br>   algorithm and the general brittleness of the network.  Finally, port<br>   number prediction has no chance of working if either client is behind<br>   two or more levels of NAT and the NAT(s) closest to the client are<br>   symmetric.  For all of these reasons, it is NOT recommended that new<br>   applications implement this trick; it is mentioned here for<br>   historical and informational purposes.<br>   There is a method that can be used in some cases to establish direct<br>   peer-to-peer TCP connections between a pair of nodes that are both<br>   behind existing middleboxes.  Most TCP sessions start with one<br>   endpoint sending a SYN packet, to which the other party responds with<br>   a SYN-ACK packet.  It is possible and legal, however, for two<br>   endpoints to start a TCP session by simultaneously sending each other<br>   SYN packets, to which each party subsequently responds with a<br>   separate ACK.  This procedure is known as a “simultaneous open.”</p>
-<p>   If a middlebox receives a TCP SYN packet from outside the private<br>   network attempting to initiate an incoming TCP connection, the<br>   middlebox will normally reject the connection attempt by either<br>   dropping the SYN packet or sending back a TCP RST (connection reset)<br>   packet.  If, however, the SYN packet arrives with source and<br>   destination addresses and port numbers that correspond to a TCP<br>   session that the middlebox believes is already active, then the<br>   middlebox will allow the packet to pass through.  In particular, if<br>   the middlebox has just recently seen and transmitted an outgoing SYN<br>   packet with the same addresses and port numbers, then it will<br>   consider the session active and allow the incoming SYN through.  If<br>   clients A and B can each correctly predict the public port number<br>   that its respective middlebox will assign the next outgoing TCP<br>   connection, and if each client initiates an outgoing TCP connection<br>   with the other client timed so that each client’s outgoing SYN passes<br>   through its local middlebox before either SYN reaches the opposite<br>   middlebox, then a working peer-to-peer TCP connection will result.</p>
-<p>   Unfortunately, this trick may be even more fragile and timing-<br>   sensitive than the UDP port number prediction trick described above.<br>   First, unless both middleboxes are simple firewalls or implement cone</p>
-<p>   NAT behavior on their TCP traffic, all the same things can go wrong<br>   with each side’s attempt to predict the public port numbers that the<br>   respective NATs will assign to the new sessions.  In addition, if<br>   either client’s SYN arrives at the opposite middlebox too quickly,<br>   then the remote middlebox may reject the SYN with a RST packet,<br>   causing the local middlebox in turn to close the new session and make<br>   future SYN retransmission attempts using the same port numbers<br>   futile.  Finally, even though support for simultaneous open is<br>   technically a mandatory part of the TCP specification [TCP], it is<br>   not implemented correctly in some common operating systems.  For this<br>   reason, this trick is likewise mentioned here only for historical<br>   reasons; it is NOT recommended for use by applications.  Applications<br>   that require efficient, direct peer-to-peer communication over<br>   existing NATs should use UDP.</p>
-<h1><span id="4-application-design-guidelines">4. Application design guidelines</span></h1><h2><span id="41-what-works-with-p2p-middleboxes">4.1. What works with P2P middleboxes</span></h2><p>  Since UDP hole punching is the most efficient existing method of<br>  establishing direct peer-to-peer communication between two nodes<br>  that are both behind NATs, and it works with a wide variety of<br>  existing NATs, it is recommended that applications use this<br>  technique if efficient peer-to-peer communication is required,<br>  but be prepared to fall back on simple relaying when direct<br>  communication cannot be established. </p>
-<h2><span id="42-peers-behind-the-same-nat">4.2. Peers behind the same NAT</span></h2><p>  In practice there may be a fairly large number of users who<br>  have not two IP addresses, but three or more. In these cases,<br>  it is hard or impossible to tell which addresses to send to<br>  the registration server. The applications should send all its<br>  addresses, in such a case.</p>
-<h2><span id="43-peer-discovery">4.3. Peer discovery</span></h2><p>  Applications sending packets to several addresses to discover<br>  which one is best to use for a given peer may become a<br>  significant source of ‘space junk’ littering the net, as the<br>  peer may have chosen to use routable addresses improperly as<br>  an internal LAN (e.g. 11.0.1.1, which is assigned to the DOD).<br>  Thus applications should exercise caution when sending the<br>  speculative hello packets.</p>
-<h2><span id="44-tcp-p2p-applications">4.4. TCP P2P applications</span></h2><p>  The sockets API, used widely by application developers, is<br>  designed with client-server applications in mind. In its<br>  native form, only a single socket can bind to a TCP or UDP<br>  port. An application is not allowed to have multiple<br>  sockets binding to the same port (TCP or UDP) to initiate<br>  simultaneous sessions with multiple external nodes (or)<br>  use one socket to listen on the port and the other sockets<br>  to initiate outgoing sessions.</p>
-<p>  The above single-socket-to-port bind restriction is not a<br>  problem however with UDP, because UDP is a datagram based<br>  protocol. UDP P2P application designers could use a single<br>  socket to send as well as receive datagrams from multiple<br>  peers using recvfrom() and sendto() calls.</p>
-<p>  This is not the case with TCP. With TCP, each incoming and<br>  outgoing connection is to be associated with a separate<br>  socket. Linux sockets API addresses this problem with the<br>  aid of SO_REUSEADDR option. On FreeBSD and NetBSD, this<br>  option does not seem to work; but, changing it to use the<br>  BSD-specific SetReuseAddress call (which Linux doesn’t<br>  have and isn’t in the Single Unix Standard) seems to work.<br>  Win32 API offers an equivalent SetReuseAddress call.<br>  Using any of the above mentioned options, an application<br>  could use multiple sockets to reuse a TCP port. Say, open<br>  two TCP stream sockets bound to the same port, do a<br>  listen() on one and a connect() from the other.</p>
-<h2><span id="45-use-of-midcom-protocol">4.5. Use of midcom protocol</span></h2><p>  If the applications know the middleboxes they would be<br>  traversing and these middleboxes implement the midcom<br>  protocol, applications could use the midcom protocol to<br>  ease their way through the middleboxes. </p>
-<p>  For example, P2P applications require that NAT middleboxes<br>  preserve end-point port bindings. If midcom is supported on<br>  the middleboxes, P2P applications can exercise control over<br>  port binding (or address binding) parameters such as lifetime,<br>  maxidletime, and directionality so the applications can both<br>  connect to external peers as well as receive connections from<br>  external peers; and do not need to send periodic keep-alives to<br>  keep the port binding alive. When the application no longer needs<br>  the binding, the application could simply dismantle the binding,<br>  also using the midcom protocol. </p>
-<h1><span id="5-nat-design-guidelines">5. NAT Design Guidelines</span></h1><p>   This section discusses considerations in the design of network<br>   address translators, as they affect peer-to-peer applications.   </p>
-<h2><span id="51-deprecate-the-use-of-symmetric-nats">5.1. Deprecate the use of symmetric NATs</span></h2><p>   Symmetric NATs gained popularity with client-server<br>   applications such as web browsers, which only need to initiate<br>   outgoing connections. However, in the recent times, P2P<br>   applications such as Instant messaging and audio conferencing<br>   have been in wide use. Symmetric NATs do not support the<br>   concept of retaining endpoint identity and are not suitable<br>   for P2P applications. Deprecating symmetric NATs is<br>   recommended to support P2P applications. </p>
-<p>   A P2P-middlebox must implement Cone NAT behavior for UDP<br>   traffic, allowing applications to establish robust P2P<br>   connectivity using the UDP hole punching technique.<br>   Ideally, a P2P-middlebox should also allow applications to<br>   make P2P connections via both TCP and UDP.</p>
-<h2><span id="52-add-incremental-cone-nat-support-to-symmetric-nat-devices">5.2. Add incremental cone-NAT support to symmetric NAT devices</span></h2><p>   One way for a symmetric NAT device to extend support to P2P<br>   applications would be to divide its assignable port<br>   namespace, reserving a portion of its ports for one-to-one<br>   sessions and a different set of ports for one-to-many<br>   sessions.</p>
-<p>   Further, a NAT device may be explicitly configured with<br>   applications and hosts that need the P2P feature, so the<br>   NAT device can auto magically assign a P2P port from the<br>   right port block. </p>
-<h2><span id="53-maintain-consistent-port-bindings-for-udp-ports">5.3. Maintain consistent port bindings for UDP ports</span></h2><p>   The primary and most important recommendation of this document for<br>   NAT designers is that the NAT maintain a consistent and stable<br>   port binding between a given (internal IP address, internal UDP<br>   port) pair and a corresponding (public IP address, public UDP<br>   port) pair for as long as any active sessions exist using that<br>   port binding. The NAT may filter incoming traffic on a<br>   per-session basis, by examining both the source and destination<br>   IP addresses and port numbers in each packet. When a node on the<br>   private network initiates connection to a new external<br>   destination, using the same source IP address and UDP port as an<br>   existing translated UDP session, the NAT should ensure that the<br>   new UDP session is given the same public IP address and UDP port<br>   numbers as the existing session.   </p>
-<h3><span id="531-preserving-port-numbers">5.3.1. Preserving port numbers</span></h3><p>   Some NATs, when establishing a new UDP session, attempt to assign the<br>   same public port number as the corresponding private port number, if<br>   that port number happens to be available.  For example, if client A<br>   at address 10.0.0.1 initiates an outgoing UDP session with a datagram<br>   from port number 1234, and the NAT’s public port number 1234 happens<br>   to be available, then the NAT uses port number 1234 at the NAT’s<br>   public IP address as the translated endpoint address for the session.<br>   This behavior might be beneficial to some legacy UDP applications<br>   that expect to communicate only using specific UDP port numbers, but<br>   it is not recommended that applications depend on this behavior since<br>   it is only possible for a NAT to preserve the port number if at most<br>   one node on the internal network is using that port number.</p>
-<p>   In addition, a NAT should NOT try to preserve the port number in a<br>   new session if doing so would conflict with the goal of maintaining a<br>   consistent binding between public and private endpoint addresses.<br>   For example, suppose client A at internal port 1234 has established a<br>   session with external server S, and NAT A has assigned public port<br>   62000 to this session because port number 1234 on the NAT was not<br>   available at the time.  Now suppose port number 1234 on the NAT<br>   subsequently becomes available, and while the session between A and S<br>   is still active, client A initiates a new session from its same<br>   internal port (1234) to a different external node B.  In this case,<br>   because a port binding has already been established between client<br>   A’s port 1234 and the NAT’s public port 62000, this binding should be<br>   maintained and the new session should also use port 62000 as the<br>   public port corresponding to client A’s port 1234.  The NAT should<br>   NOT assign public port 1234 to this new session just because port<br>   1234 has become available: that behavior would not be likely to<br>   benefit the application in any way since the application has already<br>   been operating with a translated port number, and it would break any<br>   attempts the application might make to establish peer-to-peer<br>   connections using the UDP hole punching technique.</p>
-<h2><span id="54-maintaining-consistent-port-bindings-for-tcp-ports">5.4. Maintaining consistent port bindings for TCP ports</span></h2><p>   For consistency with the behavior of UDP translation, cone NAT<br>   implementers should also maintain a consistent binding between<br>   private and public (IP address, TCP port number) pairs for TCP<br>   connections, in the same way as described above for UDP.<br>   Maintaining TCP endpoint bindings consistently will increase<br>   the NAT’s compatibility with P2P TCP applications that initiate<br>   multiple TCP connections from the same source port. </p>
-<h2><span id="55-large-timeout-for-p2p-applications">5.5. Large timeout for P2P applications</span></h2><p>   We recommend the middlebox implementers to use a minimum timeout<br>   of, say, 5 minutes (300 seconds) for P2P applications, i.e.,<br>   configure the middlebox with this idle-timeout for the port<br>   bindings for the ports set aside for P2P use. Middlebox<br>   implementers are often tempted to use a shorter one, as they are<br>   accustomed to doing currently. But, short timeouts are<br>   problematic. Consider a P2P application that involved 16 peers.<br>   They will flood the network with keepalive packets every 10<br>   seconds to avoid NAT timeouts.  This is so because one might<br>   send them 5 times as often as the middlebox’s timeout just in<br>   case the keepalives are dropped in the network.</p>
-<h2><span id="56-support-loopback-translation">5.6. Support loopback translation</span></h2><p>   We strongly recommend that middlebox implementers support<br>   loopback translation, allowing hosts behind a middlebox to<br>   communicate with other hosts behind the same middlebox through<br>   their public, possibly translated endpoints. Support for<br>   loopback translation is particularly important in the case<br>   of large-capacity NATs that are likely to be deployed as the<br>   first level of a multi-level NAT scenario. As described in<br>   section 3.3.3, hosts behind the same first-level NAT but<br>   different second-level NATs have no way to communicate with<br>   each other by UDP hole punching, even if all the middleboxes<br>   preserve endpoint identities, unless the first-level NAT<br>   also supports loopback translation.</p>
-<h1><span id="6-security-considerations">6. Security Considerations</span></h1><p>   Following the recommendations in this document should not<br>   inherently create new security issues, for either the<br>   applications or the middleboxes. Nevertheless, new security<br>   risks may be created if the techniques described here are<br>   not adhered to with sufficient care. This section describes<br>   security risks the applications could inadvertently create<br>   in attempting to support P2P communication across middleboxes,<br>   and implications for the security policies of P2P-friendly<br>   middleboxes.</p>
-<h2><span id="61-ip-address-aliasing">6.1. IP address aliasing</span></h2><p>   P2P applications must use appropriate authentication mechanisms<br>   to protect their P2P connections from accidental confusion with<br>   other P2P connections as well as from malicious connection<br>   hijacking or denial-of-service attacks. NAT-friendly P2P<br>   applications effectively must interact with multiple distinct<br>   IP address domains, but are not generally aware of the exact<br>   topology or administrative policies defining these address<br>   domains.  While attempting to establish P2P connections via<br>   UDP hole punching, applications send packets that may frequently<br>   arrive at an entirely different host than the intended one.</p>
-<p>   For example, many consumer-level NAT devices provide DHCP<br>   services that are configured by default to hand out site-local<br>   IP addresses in a particular address range. Say, a particular<br>   consumer NAT device, by default, hands out IP addresses starting<br>   with 192.168.1.100. Most private home networks using that NAT<br>   device will have a host with that IP address, and many of these<br>   networks will probably have a host at address 192.168.1.101 as<br>   well. If host A at address 192.168.1.101 on one private network<br>   attempts to establish a connection by UDP hole punching with<br>   host B at 192.168.1.100 on a different private network, then as<br>   part of this process host A will send discovery packets to<br>   address 192.168.1.100 on its local network, and host B will send<br>   discovery packets to address 192.168.1.101 on its network. Clearly,<br>   these discovery packets will not reach the intended machine since<br>   the two hosts are on different private networks, but they are very<br>   likely to reach SOME machine on these respective networks at the<br>   standard UDP port numbers used by this application, potentially<br>   causing confusion. especially if the application is also running<br>   on those other machines and does not properly authenticate its<br>   messages.</p>
-<p>   This risk due to aliasing is therefore present even without a<br>   malicious attacker. If one endpoint, say host A, is actually<br>   malicious, then without proper authentication the attacker could<br>   cause host B to connect and interact in unintended ways with<br>   another host on its private network having the same IP address<br>   as the attacker’s (purported) private address. Since the two<br>   endpoint hosts A and B presumably discovered each other through<br>   a public server S, and neither S nor B has any means to verify<br>   A’s reported private address, all P2P applications must assume<br>   that any IP address they find to be suspect until they successfully<br>   establish authenticated two-way communication.</p>
-<h2><span id="62-denial-of-service-attacks">6.2. Denial-of-service attacks</span></h2><p>   P2P applications and the public servers that support them must<br>   protect themselves against denial-of-service attacks, and ensure<br>   that they cannot be used by an attacker to mount denial-of-service<br>   attacks against other targets. To protect themselves, P2P<br>   applications and servers must avoid taking any action requiring<br>   significant local processing or storage resources until<br>   authenticated two-way communication is established. To avoid being<br>   used as a tool for denial-of-service attacks, P2P applications and<br>   servers must minimize the amount and rate of traffic they send to<br>   any newly-discovered IP address until after authenticated two-way<br>   communication is established with the intended target.</p>
-<p>   For example, P2P applications that register with a public rendezvous<br>   server can claim to have any private IP address, or perhaps multiple<br>   IP addresses. A well-connected host or group of hosts that can<br>   collectively attract a substantial volume of P2P connection attempts<br>   (e.g., by offering to serve popular content) could mount a<br>   denial-of-service attack on a target host C simply by including C’s<br>   IP address in their own list of IP addresses they register with the<br>   rendezvous server. There is no way the rendezvous server can verify<br>   the IP addresses, since they could well be legitimate private<br>   network addresses useful to other hosts for establishing<br>   network-local communication. The P2P application protocol must<br>   therefore be designed to size- and rate-limit traffic to unverified<br>   IP addresses in order to avoid the potential damage such a<br>   concentration effect could cause.</p>
-<h2><span id="63-man-in-the-middle-attacks">6.3. Man-in-the-middle attacks</span></h2><p>   Any network device on the path between a P2P client and a<br>   rendezvous server can mount a variety of man-in-the-middle<br>   attacks by pretending to be a NAT.  For example, suppose<br>   host A attempts to register with rendezvous server S, but a<br>   network-snooping attacker is able to observe this registration<br>   request. The attacker could then flood server S with requests<br>   that are identical to the client’s original request except with<br>   a modified source IP address, such as the IP address of the<br>   attacker itself.  If the attacker can convince the server to<br>   register the client using the attacker’s IP address, then the<br>   attacker can make itself an active component on the path of all<br>   future traffic from the server AND other P2P hosts to the<br>   original client, even if the attacker was originally only able<br>   to snoop the path from the client to the server.</p>
-<p>   The client cannot protect itself from this attack by<br>   authenticating its source IP address to the rendezvous server,<br>   because in order to be NAT-friendly the application MUST allow<br>   intervening NATs to change the source address silently.  This<br>   appears to be an inherent security weakness of the NAT paradigm.<br>   The only defense against such an attack is for the client to<br>   authenticate and potentially encrypt the actual content of its<br>   communication using appropriate higher-level identities, so that<br>   the interposed attacker is not able to take advantage of its<br>   position.  Even if all application-level communication is<br>   authenticated and encrypted, however, this attack could still be<br>   used as a traffic analysis tool for observing who the client is<br>   communicating with.</p>
-<h2><span id="64-impact-on-middlebox-security">6.4. Impact on middlebox security</span></h2><p>   Designing middleboxes to preserve endpoint identities does not<br>   weaken the security provided by the middlebox. For example, a<br>   Port-Restricted Cone NAT is inherently no more “promiscuous”<br>   than a Symmetric NAT in its policies for allowing either<br>   incoming or outgoing traffic to pass through the middlebox.<br>   As long as outgoing UDP sessions are enabled and the middlebox<br>   maintains consistent binding between internal and external<br>   UDP ports, the middlebox will filter out any incoming UDP packets<br>   that do not match the active sessions initiated from within the<br>   enclave. Filtering incoming traffic aggressively while maintaining<br>   consistent port bindings thus allows a middlebox to be<br>   “peer-to-peer friendly” without compromising the principle of<br>   rejecting unsolicited incoming traffic.</p>
-<p>   Maintaining consistent port binding could arguably increase the<br>   predictability of traffic emerging from the middlebox, by revealing<br>   the relationships between different UDP sessions and hence about<br>   the behavior of applications running within the enclave. This<br>   predictability could conceivably be useful to an attacker in<br>   exploiting other network or application level vulnerabilities.<br>   If the security requirements of a particular deployment scenario<br>   are so critical that such subtle information channels are of<br>   concern, however, then the middlebox almost certainly should not be<br>   configured to allow unrestricted outgoing UDP traffic in the<br>   first place. Such a middlebox should only allow communication<br>   originating from specific applications at specific ports, or<br>   via tightly-controlled application-level gateways.  In this<br>   situation there is no hope of generic, transparent peer-to-peer<br>   connectivity across the middlebox (or transparent client/server<br>   connectivity for that matter); the middlebox must either<br>   implement appropriate application-specific behavior or disallow<br>   communication entirely.</p>
-<h1><span id="7-acknowledgments">7. Acknowledgments</span></h1><p>   The authors wish to thank Henrik, Dave, and Christian Huitema<br>   for their valuable feedback.</p>
-<h1><span id="8-references">8. References</span></h1><h2><span id="81-normative-references">8.1. Normative references</span></h2><p>[BIDIR]    Peer-to-Peer Working Group, NAT/Firewall Working Committee,<br>           “Bidirectional Peer-to-Peer Communication with Interposing<br>           Firewalls and NATs”, August 2001.<br>           <a href="http://www.peer-to-peerwg.org/tech/nat/" target="_blank" rel="noopener">http://www.peer-to-peerwg.org/tech/nat/</a></p>
-<p>[KEGEL]    Dan Kegel, “NAT and Peer-to-Peer Networking”, July 1999.<br>           <a href="http://www.alumni.caltech.edu/~dank/peer-nat.html" target="_blank" rel="noopener">http://www.alumni.caltech.edu/~dank/peer-nat.html</a></p>
-<p>[MIDCOM]   P. Srisuresh, J. Kuthan, J. Rosenberg, A. Molitor, and<br>           A. Rayhan, “Middlebox communication architecture and<br>           framework”, RFC 3303, August 2002.</p>
-<p>[NAT-APPL] D. Senie, “Network Address Translator (NAT)-Friendly<br>           Application Design Guidelines”, RFC 3235, January 2002.</p>
-<p>[NAT-PROT] M. Holdrege and P. Srisuresh, “Protocol Complications<br>           with the IP Network Address Translator”, RFC 3027,<br>           January 2001.</p>
-<p>[NAT-PT]   G. Tsirtsis and P. Srisuresh, “Network Address<br>           Translation - Protocol Translation (NAT-PT)”, RFC 2766,<br>           February 2000.</p>
-<p>[NAT-TERM] P. Srisuresh and M. Holdrege, “IP Network Address<br>           Translator (NAT) Terminology and Considerations”, RFC<br>           2663, August 1999.</p>
-<p>[NAT-TRAD] P. Srisuresh and K. Egevang, “Traditional IP Network<br>           Address Translator (Traditional NAT)”, RFC 3022,<br>           January 2001.</p>
-<p>[STUN]     J. Rosenberg, J. Weinberger, C. Huitema, and R. Mahy,<br>           “STUN - Simple Traversal of User Datagram Protocol (UDP)<br>           Through Network Address Translators (NATs)”, RFC 3489,<br>           March 2003.</p>
-<h2><span id="82-informational-references">8.2. Informational references</span></h2><p>[ICE]      J. Rosenberg, “Interactive Connectivity Establishment (ICE):<br>           A Methodology for Network Address Translator (NAT) Traversal<br>           for the Session Initiation Protocol (SIP)”,<br>           draft-rosenberg-sipping-ice-00 (Work In Progress),<br>           February 2003.</p>
-<p>[RSIP]     M. Borella, J. Lo, D. Grabelsky, and G. Montenegro,<br>           “Realm Specific IP: Framework”, RFC 3102, October 2001.</p>
-<p>[SOCKS]    M. Leech, M. Ganis, Y. Lee, R. Kuris, D. Koblas, and<br>           L. Jones, “SOCKS Protocol Version 5”, RFC 1928, March 1996.</p>
-<p>[SYM-STUN] Y. Takeda, “Symmetric NAT Traversal using STUN”,<br>           draft-takeda-symmetric-nat-traversal-00.txt (Work In<br>           Progress), June 2003.</p>
+  10.0.0.1:1234                                 10.1.1.3:1234
+</code></pre>
+<p>Suppose NAT X is a large industrial NAT deployed by an internet<br>
+service provider (ISP) to multiplex many customers onto a few public<br>
+IP addresses, and NATs A and B are small consumer NAT gateways<br>
+deployed independently by two of the ISP’s customers to multiplex<br>
+their private home networks onto their respective ISP-provided IP<br>
+addresses.  Only server S and NAT X have globally routable IP<br>
+addresses; the “public” IP addresses used by NAT A and NAT B are<br>
+actually private to the ISP’s addressing realm, while client A’s and<br>
+B’s addresses in turn are private to the addressing realms of NAT A<br>
+and B, respectively.  Each client initiates an outgoing connection to<br>
+server S as before, causing NATs A and B each to create a single<br>
+public/private translation, and causing NAT X to establish a<br>
+public/private translation for each session.</p>
+<p>Now suppose clients A and B attempt to establish a direct peer-to-<br>
+peer UDP connection.  The optimal method would be for client A to<br>
+send messages to client B’s public address at NAT B,<br>
+192.168.1.2:31000 in the ISP’s addressing realm, and for client B to<br>
+send messages to A’s public address at NAT B, namely<br>
+192.168.1.1:30000.  Unfortunately, A and B have no way to learn these<br>
+addresses, because server S only sees the “global” public addresses<br>
+of the clients, 155.99.25.11:62000 and 155.99.25.11:62001.  Even if A<br>
+and B had some way to learn these addresses, there is still no<br>
+guarantee that they would be usable because the address assignments<br>
+in the ISP’s private addressing realm might conflict with unrelated<br>
+address assignments in the clients’ private realms.  The clients<br>
+therefore have no choice but to use their global public addresses as<br>
+seen by S for their P2P communication, and rely on NAT X to provide<br>
+loopback translation.</p>
+<h3 id="3-3-4-Consistent-port-bindings">3.3.4. Consistent port bindings</h3>
+<p>The hole punching technique has one main caveat: it works only if<br>
+both NATs are cone NATs (or non-NAT firewalls), which maintain a<br>
+consistent port binding between a given (private IP, private UDP)<br>
+pair and a (public IP, public UDP) pair for as long as that UDP port<br>
+is in use.  Assigning a new public port for each new session, as a<br>
+symmetric NAT does, makes it impossible for a UDP application to<br>
+reuse an already-established translation for communication with<br>
+different external destinations.  Since cone NATs are the most<br>
+widespread, the UDP hole punching technique is fairly broadly<br>
+applicable; nevertheless a substantial fraction of deployed NATs are<br>
+symmetric and do not support the technique.</p>
+<h2 id="3-4-UDP-port-number-prediction">3.4. UDP port number prediction</h2>
+<p>A variant of the UDP hole punching technique discussed above exists<br>
+that allows peer-to-peer UDP sessions to be created in the presence<br>
+of some symmetric NATs.  This method is sometimes called the “N+1”<br>
+technique [BIDIR] and is explored in detail by Takeda [SYM-STUN].<br>
+The method works by analyzing the behavior of the NAT and attempting<br>
+to predict the public port numbers it will assign to future sessions.<br>
+Consider again the situation in which two clients, A and B, each<br>
+behind a separate NAT, have each established UDP connections with a<br>
+permanently addressable server S:</p>
+<pre><code>                              Server S
+                          18.181.0.31:1234
+                                 |
+                                 |
+          +----------------------+----------------------+
+          |                                             |
+   Symmetric NAT A                               Symmetric NAT B
+</code></pre>
+<p>A-S 155.99.25.11:62000                        B-S 138.76.29.7:31000<br>
+|                                             |<br>
+|                                             |<br>
+Client A                                      Client B<br>
+10.0.0.1:1234                                 10.1.1.3:1234</p>
+<p>NAT A has assigned its own UDP port 62000 to the communication<br>
+session between A and S, and NAT B has assigned its port 31000 to the<br>
+session between B and S.  By communicating through server S, A and B<br>
+learn each other’s public IP addresses and port numbers as observed<br>
+by S.  Client A now starts sending UDP messages to port 31001 at<br>
+address 138.76.29.7 (note the port number increment), and client B<br>
+simultaneously starts sending messages to port 62001 at address<br>
+155.99.25.11.  If NATs A and B assign port numbers to new sessions<br>
+sequentially, and if not much time has passed since the A-S and B-S<br>
+sessions were initiated, then a working bi-directional communication<br>
+channel between A and B should result.  A’s messages to B cause NAT A<br>
+to open up a new session, to which NAT A will (hopefully) assign<br>
+public port number 62001, because 62001 is next in sequence after the<br>
+port number 62000 it previously assigned to the session between A and<br>
+S.  Similarly, B’s messages to A will cause NAT B to open a new<br>
+session, to which it will (hopefully) assign port number 31001.  If<br>
+both clients have correctly guessed the port numbers each NAT assigns<br>
+to the new sessions, then a bi-directional UDP communication channel<br>
+will have been established as shown below.</p>
+<pre><code>                              Server S
+                          18.181.0.31:1234
+                                 |
+                                 |
+          +----------------------+----------------------+
+          |                                             |
+        NAT A                                         NAT B
+</code></pre>
+<p>A-S 155.99.25.11:62000                        B-S 138.76.29.7:31000<br>
+A-B 155.99.25.11:62001                        B-A 138.76.29.7:31001<br>
+|                                             |<br>
+|                                             |<br>
+Client A                                      Client B<br>
+10.0.0.1:1234                                 10.1.1.3:1234</p>
+<p>Obviously there are many things that can cause this trick to fail.<br>
+If the predicted port number at either NAT already happens to be in<br>
+use by an unrelated session, then the NAT will skip over that port<br>
+number and the connection attempt will fail.  If either NAT sometimes<br>
+or always chooses port numbers non-sequentially, then the trick will<br>
+fail.  If a different client behind NAT A (or B respectively) opens<br>
+up a new outgoing UDP connection to any external destination after A<br>
+(B) establishes its connection with S but before sending its first<br>
+message to B (A), then the unrelated client will inadvertently<br>
+“steal” the desired port number.  This trick is therefore much less<br>
+likely to work when either NAT involved is under load.</p>
+<p>Since in practice a P2P application implementing this trick would<br>
+still need to work if the NATs are cone NATs, or if one is a cone NAT<br>
+and the other is a symmetric NAT, the application would need to<br>
+detect beforehand what kind of NAT is involved on either end [STUN]<br>
+and modify its behavior accordingly, increasing the complexity of the<br>
+algorithm and the general brittleness of the network.  Finally, port<br>
+number prediction has no chance of working if either client is behind<br>
+two or more levels of NAT and the NAT(s) closest to the client are<br>
+symmetric.  For all of these reasons, it is NOT recommended that new<br>
+applications implement this trick; it is mentioned here for<br>
+historical and informational purposes.<br>
+There is a method that can be used in some cases to establish direct<br>
+peer-to-peer TCP connections between a pair of nodes that are both<br>
+behind existing middleboxes.  Most TCP sessions start with one<br>
+endpoint sending a SYN packet, to which the other party responds with<br>
+a SYN-ACK packet.  It is possible and legal, however, for two<br>
+endpoints to start a TCP session by simultaneously sending each other<br>
+SYN packets, to which each party subsequently responds with a<br>
+separate ACK.  This procedure is known as a “simultaneous open.”</p>
+<p>If a middlebox receives a TCP SYN packet from outside the private<br>
+network attempting to initiate an incoming TCP connection, the<br>
+middlebox will normally reject the connection attempt by either<br>
+dropping the SYN packet or sending back a TCP RST (connection reset)<br>
+packet.  If, however, the SYN packet arrives with source and<br>
+destination addresses and port numbers that correspond to a TCP<br>
+session that the middlebox believes is already active, then the<br>
+middlebox will allow the packet to pass through.  In particular, if<br>
+the middlebox has just recently seen and transmitted an outgoing SYN<br>
+packet with the same addresses and port numbers, then it will<br>
+consider the session active and allow the incoming SYN through.  If<br>
+clients A and B can each correctly predict the public port number<br>
+that its respective middlebox will assign the next outgoing TCP<br>
+connection, and if each client initiates an outgoing TCP connection<br>
+with the other client timed so that each client’s outgoing SYN passes<br>
+through its local middlebox before either SYN reaches the opposite<br>
+middlebox, then a working peer-to-peer TCP connection will result.</p>
+<p>Unfortunately, this trick may be even more fragile and timing-<br>
+sensitive than the UDP port number prediction trick described above.<br>
+First, unless both middleboxes are simple firewalls or implement cone</p>
+<p>NAT behavior on their TCP traffic, all the same things can go wrong<br>
+with each side’s attempt to predict the public port numbers that the<br>
+respective NATs will assign to the new sessions.  In addition, if<br>
+either client’s SYN arrives at the opposite middlebox too quickly,<br>
+then the remote middlebox may reject the SYN with a RST packet,<br>
+causing the local middlebox in turn to close the new session and make<br>
+future SYN retransmission attempts using the same port numbers<br>
+futile.  Finally, even though support for simultaneous open is<br>
+technically a mandatory part of the TCP specification [TCP], it is<br>
+not implemented correctly in some common operating systems.  For this<br>
+reason, this trick is likewise mentioned here only for historical<br>
+reasons; it is NOT recommended for use by applications.  Applications<br>
+that require efficient, direct peer-to-peer communication over<br>
+existing NATs should use UDP.</p>
+<h1 id="4-Application-design-guidelines">4. Application design guidelines</h1>
+<h2 id="4-1-What-works-with-P2P-middleboxes">4.1. What works with P2P middleboxes</h2>
+<p>Since UDP hole punching is the most efficient existing method of<br>
+establishing direct peer-to-peer communication between two nodes<br>
+that are both behind NATs, and it works with a wide variety of<br>
+existing NATs, it is recommended that applications use this<br>
+technique if efficient peer-to-peer communication is required,<br>
+but be prepared to fall back on simple relaying when direct<br>
+communication cannot be established.</p>
+<h2 id="4-2-Peers-behind-the-same-NAT">4.2. Peers behind the same NAT</h2>
+<p>In practice there may be a fairly large number of users who<br>
+have not two IP addresses, but three or more. In these cases,<br>
+it is hard or impossible to tell which addresses to send to<br>
+the registration server. The applications should send all its<br>
+addresses, in such a case.</p>
+<h2 id="4-3-Peer-discovery">4.3. Peer discovery</h2>
+<p>Applications sending packets to several addresses to discover<br>
+which one is best to use for a given peer may become a<br>
+significant source of ‘space junk’ littering the net, as the<br>
+peer may have chosen to use routable addresses improperly as<br>
+an internal LAN (e.g. 11.0.1.1, which is assigned to the DOD).<br>
+Thus applications should exercise caution when sending the<br>
+speculative hello packets.</p>
+<h2 id="4-4-TCP-P2P-applications">4.4. TCP P2P applications</h2>
+<p>The sockets API, used widely by application developers, is<br>
+designed with client-server applications in mind. In its<br>
+native form, only a single socket can bind to a TCP or UDP<br>
+port. An application is not allowed to have multiple<br>
+sockets binding to the same port (TCP or UDP) to initiate<br>
+simultaneous sessions with multiple external nodes (or)<br>
+use one socket to listen on the port and the other sockets<br>
+to initiate outgoing sessions.</p>
+<p>The above single-socket-to-port bind restriction is not a<br>
+problem however with UDP, because UDP is a datagram based<br>
+protocol. UDP P2P application designers could use a single<br>
+socket to send as well as receive datagrams from multiple<br>
+peers using recvfrom() and sendto() calls.</p>
+<p>This is not the case with TCP. With TCP, each incoming and<br>
+outgoing connection is to be associated with a separate<br>
+socket. Linux sockets API addresses this problem with the<br>
+aid of SO_REUSEADDR option. On FreeBSD and NetBSD, this<br>
+option does not seem to work; but, changing it to use the<br>
+BSD-specific SetReuseAddress call (which Linux doesn’t<br>
+have and isn’t in the Single Unix Standard) seems to work.<br>
+Win32 API offers an equivalent SetReuseAddress call.<br>
+Using any of the above mentioned options, an application<br>
+could use multiple sockets to reuse a TCP port. Say, open<br>
+two TCP stream sockets bound to the same port, do a<br>
+listen() on one and a connect() from the other.</p>
+<h2 id="4-5-Use-of-midcom-protocol">4.5. Use of midcom protocol</h2>
+<p>If the applications know the middleboxes they would be<br>
+traversing and these middleboxes implement the midcom<br>
+protocol, applications could use the midcom protocol to<br>
+ease their way through the middleboxes.</p>
+<p>For example, P2P applications require that NAT middleboxes<br>
+preserve end-point port bindings. If midcom is supported on<br>
+the middleboxes, P2P applications can exercise control over<br>
+port binding (or address binding) parameters such as lifetime,<br>
+maxidletime, and directionality so the applications can both<br>
+connect to external peers as well as receive connections from<br>
+external peers; and do not need to send periodic keep-alives to<br>
+keep the port binding alive. When the application no longer needs<br>
+the binding, the application could simply dismantle the binding,<br>
+also using the midcom protocol.</p>
+<h1 id="5-NAT-Design-Guidelines">5. NAT Design Guidelines</h1>
+<p>This section discusses considerations in the design of network<br>
+address translators, as they affect peer-to-peer applications.</p>
+<h2 id="5-1-Deprecate-the-use-of-symmetric-NATs">5.1. Deprecate the use of symmetric NATs</h2>
+<p>Symmetric NATs gained popularity with client-server<br>
+applications such as web browsers, which only need to initiate<br>
+outgoing connections. However, in the recent times, P2P<br>
+applications such as Instant messaging and audio conferencing<br>
+have been in wide use. Symmetric NATs do not support the<br>
+concept of retaining endpoint identity and are not suitable<br>
+for P2P applications. Deprecating symmetric NATs is<br>
+recommended to support P2P applications.</p>
+<p>A P2P-middlebox must implement Cone NAT behavior for UDP<br>
+traffic, allowing applications to establish robust P2P<br>
+connectivity using the UDP hole punching technique.<br>
+Ideally, a P2P-middlebox should also allow applications to<br>
+make P2P connections via both TCP and UDP.</p>
+<h2 id="5-2-Add-incremental-cone-NAT-support-to-symmetric-NAT-devices">5.2. Add incremental cone-NAT support to symmetric NAT devices</h2>
+<p>One way for a symmetric NAT device to extend support to P2P<br>
+applications would be to divide its assignable port<br>
+namespace, reserving a portion of its ports for one-to-one<br>
+sessions and a different set of ports for one-to-many<br>
+sessions.</p>
+<p>Further, a NAT device may be explicitly configured with<br>
+applications and hosts that need the P2P feature, so the<br>
+NAT device can auto magically assign a P2P port from the<br>
+right port block.</p>
+<h2 id="5-3-Maintain-consistent-port-bindings-for-UDP-ports">5.3. Maintain consistent port bindings for UDP ports</h2>
+<p>The primary and most important recommendation of this document for<br>
+NAT designers is that the NAT maintain a consistent and stable<br>
+port binding between a given (internal IP address, internal UDP<br>
+port) pair and a corresponding (public IP address, public UDP<br>
+port) pair for as long as any active sessions exist using that<br>
+port binding. The NAT may filter incoming traffic on a<br>
+per-session basis, by examining both the source and destination<br>
+IP addresses and port numbers in each packet. When a node on the<br>
+private network initiates connection to a new external<br>
+destination, using the same source IP address and UDP port as an<br>
+existing translated UDP session, the NAT should ensure that the<br>
+new UDP session is given the same public IP address and UDP port<br>
+numbers as the existing session.</p>
+<h3 id="5-3-1-Preserving-port-numbers">5.3.1. Preserving port numbers</h3>
+<p>Some NATs, when establishing a new UDP session, attempt to assign the<br>
+same public port number as the corresponding private port number, if<br>
+that port number happens to be available.  For example, if client A<br>
+at address 10.0.0.1 initiates an outgoing UDP session with a datagram<br>
+from port number 1234, and the NAT’s public port number 1234 happens<br>
+to be available, then the NAT uses port number 1234 at the NAT’s<br>
+public IP address as the translated endpoint address for the session.<br>
+This behavior might be beneficial to some legacy UDP applications<br>
+that expect to communicate only using specific UDP port numbers, but<br>
+it is not recommended that applications depend on this behavior since<br>
+it is only possible for a NAT to preserve the port number if at most<br>
+one node on the internal network is using that port number.</p>
+<p>In addition, a NAT should NOT try to preserve the port number in a<br>
+new session if doing so would conflict with the goal of maintaining a<br>
+consistent binding between public and private endpoint addresses.<br>
+For example, suppose client A at internal port 1234 has established a<br>
+session with external server S, and NAT A has assigned public port<br>
+62000 to this session because port number 1234 on the NAT was not<br>
+available at the time.  Now suppose port number 1234 on the NAT<br>
+subsequently becomes available, and while the session between A and S<br>
+is still active, client A initiates a new session from its same<br>
+internal port (1234) to a different external node B.  In this case,<br>
+because a port binding has already been established between client<br>
+A’s port 1234 and the NAT’s public port 62000, this binding should be<br>
+maintained and the new session should also use port 62000 as the<br>
+public port corresponding to client A’s port 1234.  The NAT should<br>
+NOT assign public port 1234 to this new session just because port<br>
+1234 has become available: that behavior would not be likely to<br>
+benefit the application in any way since the application has already<br>
+been operating with a translated port number, and it would break any<br>
+attempts the application might make to establish peer-to-peer<br>
+connections using the UDP hole punching technique.</p>
+<h2 id="5-4-Maintaining-consistent-port-bindings-for-TCP-ports">5.4. Maintaining consistent port bindings for TCP ports</h2>
+<p>For consistency with the behavior of UDP translation, cone NAT<br>
+implementers should also maintain a consistent binding between<br>
+private and public (IP address, TCP port number) pairs for TCP<br>
+connections, in the same way as described above for UDP.<br>
+Maintaining TCP endpoint bindings consistently will increase<br>
+the NAT’s compatibility with P2P TCP applications that initiate<br>
+multiple TCP connections from the same source port.</p>
+<h2 id="5-5-Large-timeout-for-P2P-applications">5.5. Large timeout for P2P applications</h2>
+<p>We recommend the middlebox implementers to use a minimum timeout<br>
+of, say, 5 minutes (300 seconds) for P2P applications, i.e.,<br>
+configure the middlebox with this idle-timeout for the port<br>
+bindings for the ports set aside for P2P use. Middlebox<br>
+implementers are often tempted to use a shorter one, as they are<br>
+accustomed to doing currently. But, short timeouts are<br>
+problematic. Consider a P2P application that involved 16 peers.<br>
+They will flood the network with keepalive packets every 10<br>
+seconds to avoid NAT timeouts.  This is so because one might<br>
+send them 5 times as often as the middlebox’s timeout just in<br>
+case the keepalives are dropped in the network.</p>
+<h2 id="5-6-Support-loopback-translation">5.6. Support loopback translation</h2>
+<p>We strongly recommend that middlebox implementers support<br>
+loopback translation, allowing hosts behind a middlebox to<br>
+communicate with other hosts behind the same middlebox through<br>
+their public, possibly translated endpoints. Support for<br>
+loopback translation is particularly important in the case<br>
+of large-capacity NATs that are likely to be deployed as the<br>
+first level of a multi-level NAT scenario. As described in<br>
+section 3.3.3, hosts behind the same first-level NAT but<br>
+different second-level NATs have no way to communicate with<br>
+each other by UDP hole punching, even if all the middleboxes<br>
+preserve endpoint identities, unless the first-level NAT<br>
+also supports loopback translation.</p>
+<h1 id="6-Security-Considerations">6. Security Considerations</h1>
+<p>Following the recommendations in this document should not<br>
+inherently create new security issues, for either the<br>
+applications or the middleboxes. Nevertheless, new security<br>
+risks may be created if the techniques described here are<br>
+not adhered to with sufficient care. This section describes<br>
+security risks the applications could inadvertently create<br>
+in attempting to support P2P communication across middleboxes,<br>
+and implications for the security policies of P2P-friendly<br>
+middleboxes.</p>
+<h2 id="6-1-IP-address-aliasing">6.1. IP address aliasing</h2>
+<p>P2P applications must use appropriate authentication mechanisms<br>
+to protect their P2P connections from accidental confusion with<br>
+other P2P connections as well as from malicious connection<br>
+hijacking or denial-of-service attacks. NAT-friendly P2P<br>
+applications effectively must interact with multiple distinct<br>
+IP address domains, but are not generally aware of the exact<br>
+topology or administrative policies defining these address<br>
+domains.  While attempting to establish P2P connections via<br>
+UDP hole punching, applications send packets that may frequently<br>
+arrive at an entirely different host than the intended one.</p>
+<p>For example, many consumer-level NAT devices provide DHCP<br>
+services that are configured by default to hand out site-local<br>
+IP addresses in a particular address range. Say, a particular<br>
+consumer NAT device, by default, hands out IP addresses starting<br>
+with 192.168.1.100. Most private home networks using that NAT<br>
+device will have a host with that IP address, and many of these<br>
+networks will probably have a host at address 192.168.1.101 as<br>
+well. If host A at address 192.168.1.101 on one private network<br>
+attempts to establish a connection by UDP hole punching with<br>
+host B at 192.168.1.100 on a different private network, then as<br>
+part of this process host A will send discovery packets to<br>
+address 192.168.1.100 on its local network, and host B will send<br>
+discovery packets to address 192.168.1.101 on its network. Clearly,<br>
+these discovery packets will not reach the intended machine since<br>
+the two hosts are on different private networks, but they are very<br>
+likely to reach SOME machine on these respective networks at the<br>
+standard UDP port numbers used by this application, potentially<br>
+causing confusion. especially if the application is also running<br>
+on those other machines and does not properly authenticate its<br>
+messages.</p>
+<p>This risk due to aliasing is therefore present even without a<br>
+malicious attacker. If one endpoint, say host A, is actually<br>
+malicious, then without proper authentication the attacker could<br>
+cause host B to connect and interact in unintended ways with<br>
+another host on its private network having the same IP address<br>
+as the attacker’s (purported) private address. Since the two<br>
+endpoint hosts A and B presumably discovered each other through<br>
+a public server S, and neither S nor B has any means to verify<br>
+A’s reported private address, all P2P applications must assume<br>
+that any IP address they find to be suspect until they successfully<br>
+establish authenticated two-way communication.</p>
+<h2 id="6-2-Denial-of-service-attacks">6.2. Denial-of-service attacks</h2>
+<p>P2P applications and the public servers that support them must<br>
+protect themselves against denial-of-service attacks, and ensure<br>
+that they cannot be used by an attacker to mount denial-of-service<br>
+attacks against other targets. To protect themselves, P2P<br>
+applications and servers must avoid taking any action requiring<br>
+significant local processing or storage resources until<br>
+authenticated two-way communication is established. To avoid being<br>
+used as a tool for denial-of-service attacks, P2P applications and<br>
+servers must minimize the amount and rate of traffic they send to<br>
+any newly-discovered IP address until after authenticated two-way<br>
+communication is established with the intended target.</p>
+<p>For example, P2P applications that register with a public rendezvous<br>
+server can claim to have any private IP address, or perhaps multiple<br>
+IP addresses. A well-connected host or group of hosts that can<br>
+collectively attract a substantial volume of P2P connection attempts<br>
+(e.g., by offering to serve popular content) could mount a<br>
+denial-of-service attack on a target host C simply by including C’s<br>
+IP address in their own list of IP addresses they register with the<br>
+rendezvous server. There is no way the rendezvous server can verify<br>
+the IP addresses, since they could well be legitimate private<br>
+network addresses useful to other hosts for establishing<br>
+network-local communication. The P2P application protocol must<br>
+therefore be designed to size- and rate-limit traffic to unverified<br>
+IP addresses in order to avoid the potential damage such a<br>
+concentration effect could cause.</p>
+<h2 id="6-3-Man-in-the-middle-attacks">6.3. Man-in-the-middle attacks</h2>
+<p>Any network device on the path between a P2P client and a<br>
+rendezvous server can mount a variety of man-in-the-middle<br>
+attacks by pretending to be a NAT.  For example, suppose<br>
+host A attempts to register with rendezvous server S, but a<br>
+network-snooping attacker is able to observe this registration<br>
+request. The attacker could then flood server S with requests<br>
+that are identical to the client’s original request except with<br>
+a modified source IP address, such as the IP address of the<br>
+attacker itself.  If the attacker can convince the server to<br>
+register the client using the attacker’s IP address, then the<br>
+attacker can make itself an active component on the path of all<br>
+future traffic from the server AND other P2P hosts to the<br>
+original client, even if the attacker was originally only able<br>
+to snoop the path from the client to the server.</p>
+<p>The client cannot protect itself from this attack by<br>
+authenticating its source IP address to the rendezvous server,<br>
+because in order to be NAT-friendly the application MUST allow<br>
+intervening NATs to change the source address silently.  This<br>
+appears to be an inherent security weakness of the NAT paradigm.<br>
+The only defense against such an attack is for the client to<br>
+authenticate and potentially encrypt the actual content of its<br>
+communication using appropriate higher-level identities, so that<br>
+the interposed attacker is not able to take advantage of its<br>
+position.  Even if all application-level communication is<br>
+authenticated and encrypted, however, this attack could still be<br>
+used as a traffic analysis tool for observing who the client is<br>
+communicating with.</p>
+<h2 id="6-4-Impact-on-middlebox-security">6.4. Impact on middlebox security</h2>
+<p>Designing middleboxes to preserve endpoint identities does not<br>
+weaken the security provided by the middlebox. For example, a<br>
+Port-Restricted Cone NAT is inherently no more “promiscuous”<br>
+than a Symmetric NAT in its policies for allowing either<br>
+incoming or outgoing traffic to pass through the middlebox.<br>
+As long as outgoing UDP sessions are enabled and the middlebox<br>
+maintains consistent binding between internal and external<br>
+UDP ports, the middlebox will filter out any incoming UDP packets<br>
+that do not match the active sessions initiated from within the<br>
+enclave. Filtering incoming traffic aggressively while maintaining<br>
+consistent port bindings thus allows a middlebox to be<br>
+“peer-to-peer friendly” without compromising the principle of<br>
+rejecting unsolicited incoming traffic.</p>
+<p>Maintaining consistent port binding could arguably increase the<br>
+predictability of traffic emerging from the middlebox, by revealing<br>
+the relationships between different UDP sessions and hence about<br>
+the behavior of applications running within the enclave. This<br>
+predictability could conceivably be useful to an attacker in<br>
+exploiting other network or application level vulnerabilities.<br>
+If the security requirements of a particular deployment scenario<br>
+are so critical that such subtle information channels are of<br>
+concern, however, then the middlebox almost certainly should not be<br>
+configured to allow unrestricted outgoing UDP traffic in the<br>
+first place. Such a middlebox should only allow communication<br>
+originating from specific applications at specific ports, or<br>
+via tightly-controlled application-level gateways.  In this<br>
+situation there is no hope of generic, transparent peer-to-peer<br>
+connectivity across the middlebox (or transparent client/server<br>
+connectivity for that matter); the middlebox must either<br>
+implement appropriate application-specific behavior or disallow<br>
+communication entirely.</p>
+<h1 id="7-Acknowledgments">7. Acknowledgments</h1>
+<p>The authors wish to thank Henrik, Dave, and Christian Huitema<br>
+for their valuable feedback.</p>
+<h1 id="8-References">8. References</h1>
+<h2 id="8-1-Normative-references">8.1. Normative references</h2>
+<p>[BIDIR]    Peer-to-Peer Working Group, NAT/Firewall Working Committee,<br>
+“Bidirectional Peer-to-Peer Communication with Interposing<br>
+Firewalls and NATs”, August 2001.<br>
+<a href="http://www.peer-to-peerwg.org/tech/nat/" target="_blank" rel="noopener">http://www.peer-to-peerwg.org/tech/nat/</a></p>
+<p>[KEGEL]    Dan Kegel, “NAT and Peer-to-Peer Networking”, July 1999.<br>
+<a href="http://www.alumni.caltech.edu/~dank/peer-nat.html" target="_blank" rel="noopener">http://www.alumni.caltech.edu/~dank/peer-nat.html</a></p>
+<p>[MIDCOM]   P. Srisuresh, J. Kuthan, J. Rosenberg, A. Molitor, and<br>
+A. Rayhan, “Middlebox communication architecture and<br>
+framework”, RFC 3303, August 2002.</p>
+<p>[NAT-APPL] D. Senie, “Network Address Translator (NAT)-Friendly<br>
+Application Design Guidelines”, RFC 3235, January 2002.</p>
+<p>[NAT-PROT] M. Holdrege and P. Srisuresh, “Protocol Complications<br>
+with the IP Network Address Translator”, RFC 3027,<br>
+January 2001.</p>
+<p>[NAT-PT]   G. Tsirtsis and P. Srisuresh, “Network Address<br>
+Translation - Protocol Translation (NAT-PT)”, RFC 2766,<br>
+February 2000.</p>
+<p>[NAT-TERM] P. Srisuresh and M. Holdrege, “IP Network Address<br>
+Translator (NAT) Terminology and Considerations”, RFC<br>
+2663, August 1999.</p>
+<p>[NAT-TRAD] P. Srisuresh and K. Egevang, “Traditional IP Network<br>
+Address Translator (Traditional NAT)”, RFC 3022,<br>
+January 2001.</p>
+<p>[STUN]     J. Rosenberg, J. Weinberger, C. Huitema, and R. Mahy,<br>
+“STUN - Simple Traversal of User Datagram Protocol (UDP)<br>
+Through Network Address Translators (NATs)”, RFC 3489,<br>
+March 2003.</p>
+<h2 id="8-2-Informational-references">8.2. Informational references</h2>
+<p>[ICE]      J. Rosenberg, “Interactive Connectivity Establishment (ICE):<br>
+A Methodology for Network Address Translator (NAT) Traversal<br>
+for the Session Initiation Protocol (SIP)”,<br>
+draft-rosenberg-sipping-ice-00 (Work In Progress),<br>
+February 2003.</p>
+<p>[RSIP]     M. Borella, J. Lo, D. Grabelsky, and G. Montenegro,<br>
+“Realm Specific IP: Framework”, RFC 3102, October 2001.</p>
+<p>[SOCKS]    M. Leech, M. Ganis, Y. Lee, R. Kuris, D. Koblas, and<br>
+L. Jones, “SOCKS Protocol Version 5”, RFC 1928, March 1996.</p>
+<p>[SYM-STUN] Y. Takeda, “Symmetric NAT Traversal using STUN”,<br>
+draft-takeda-symmetric-nat-traversal-00.txt (Work In<br>
+Progress), June 2003.</p>
 <p>[TCP]      “Transmission Control Protocol”, RFC 793, September 1981.</p>
-<p>[TEREDO]   C. Huitema, “Teredo: Tunneling IPv6 over UDP through NATs”,<br>           draft-ietf-ngtrans-shipworm-08.txt (Work In Progress),<br>           September 2002.</p>
-<p>[TURN]     J. Rosenberg, J. Weinberger, R. Mahy, and C. Huitema,<br>           “Traversal Using Relay NAT (TURN)”,<br>           draft-rosenberg-midcom-turn-01 (Work In Progress),<br>           March 2003.</p>
-<p>[UPNP]     UPnP Forum, “Internet Gateway Device (IGD) Standardized<br>           Device Control Protocol V 1.0”, November 2001.<br>           <a href="http://www.upnp.org/standardizeddcps/igd.asp" target="_blank" rel="noopener">http://www.upnp.org/standardizeddcps/igd.asp</a></p>
-<h1><span id="9-authors-address">9. Author’s Address</span></h1><p>   Bryan Ford<br>   Laboratory for Computer Science<br>   Massachusetts Institute of Technology<br>   77 Massachusetts Ave.<br>   Cambridge, MA 02139<br>   Phone: (617) 253-5261<br>   E-mail: <a href="mailto:baford@mit.edu" target="_blank" rel="noopener">baford@mit.edu</a><br>   Web: <a href="http://www.brynosaurus.com/" target="_blank" rel="noopener">http://www.brynosaurus.com/</a></p>
-<p>   Pyda Srisuresh<br>   Caymas Systems, Inc.<br>   11799-A North McDowell Blvd.<br>   Petaluma, CA 94954<br>   Phone: (707) 283-5063<br>   E-mail: <a href="mailto:srisuresh@yahoo.com" target="_blank" rel="noopener">srisuresh@yahoo.com</a></p>
-<p>   Dan Kegel<br>   Kegel.com<br>   901 S. Sycamore Ave.<br>   Los Angeles, CA 90036<br>   Phone: 323 931-6717<br>   Email: <a href="mailto:dank@kegel.com" target="_blank" rel="noopener">dank@kegel.com</a><br>   Web: <a href="http://www.kegel.com/" target="_blank" rel="noopener">http://www.kegel.com/</a></p>
-<h1><span id="status-of-this-memo">Status of this Memo</span></h1><p>   This document is an Internet-Draft and is subject to all provisions<br>   of Section 10 of RFC2026.  Internet-Drafts are working documents of<br>   the Internet Engineering Task Force (IETF), its areas, and its<br>   working groups.  Note that other groups may also distribute working<br>   documents as Internet-Drafts.</p>
-<p>   Internet-Drafts are draft documents valid for a maximum of six months<br>   and may be updated, replaced, or obsoleted by other documents at any<br>   time.  It is inappropriate to use Internet- Drafts as reference<br>   material or to cite them other than as “work in progress.”</p>
-<p>   The list of current Internet-Drafts can be accessed at<br>   <a href="http://www.ietf.org/1id-abstracts.html" target="_blank" rel="noopener">http://www.ietf.org/1id-abstracts.html</a></p>
-<p>   The list of Internet-Draft Shadow Directories can be accessed at<br>   <a href="http://www.ietf.org/shadow.html" target="_blank" rel="noopener">http://www.ietf.org/shadow.html</a></p>
-<p>   Distribution of this document is unlimited.</p>
+<p>[TEREDO]   C. Huitema, “Teredo: Tunneling IPv6 over UDP through NATs”,<br>
+draft-ietf-ngtrans-shipworm-08.txt (Work In Progress),<br>
+September 2002.</p>
+<p>[TURN]     J. Rosenberg, J. Weinberger, R. Mahy, and C. Huitema,<br>
+“Traversal Using Relay NAT (TURN)”,<br>
+draft-rosenberg-midcom-turn-01 (Work In Progress),<br>
+March 2003.</p>
+<p>[UPNP]     UPnP Forum, “Internet Gateway Device (IGD) Standardized<br>
+Device Control Protocol V 1.0”, November 2001.<br>
+<a href="http://www.upnp.org/standardizeddcps/igd.asp" target="_blank" rel="noopener">http://www.upnp.org/standardizeddcps/igd.asp</a></p>
+<h1 id="9-Author’s-Address">9. Author’s Address</h1>
+<p>Bryan Ford<br>
+Laboratory for Computer Science<br>
+Massachusetts Institute of Technology<br>
+77 Massachusetts Ave.<br>
+Cambridge, MA 02139<br>
+Phone: (617) 253-5261<br>
+E-mail: <a href="mailto:baford@mit.edu">baford@mit.edu</a><br>
+Web: <a href="http://www.brynosaurus.com/" target="_blank" rel="noopener">http://www.brynosaurus.com/</a></p>
+<p>Pyda Srisuresh<br>
+Caymas Systems, Inc.<br>
+11799-A North McDowell Blvd.<br>
+Petaluma, CA 94954<br>
+Phone: (707) 283-5063<br>
+E-mail: <a href="mailto:srisuresh@yahoo.com">srisuresh@yahoo.com</a></p>
+<p>Dan Kegel<br>
+<a href="http://Kegel.com" target="_blank" rel="noopener">Kegel.com</a><br>
+901 S. Sycamore Ave.<br>
+Los Angeles, CA 90036<br>
+Phone: 323 931-6717<br>
+Email: <a href="mailto:dank@kegel.com">dank@kegel.com</a><br>
+Web: <a href="http://www.kegel.com/" target="_blank" rel="noopener">http://www.kegel.com/</a></p>
+<h1 id="Status-of-this-Memo">Status of this Memo</h1>
+<p>This document is an Internet-Draft and is subject to all provisions<br>
+of Section 10 of RFC2026.  Internet-Drafts are working documents of<br>
+the Internet Engineering Task Force (IETF), its areas, and its<br>
+working groups.  Note that other groups may also distribute working<br>
+documents as Internet-Drafts.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months<br>
+and may be updated, replaced, or obsoleted by other documents at any<br>
+time.  It is inappropriate to use Internet- Drafts as reference<br>
+material or to cite them other than as “work in progress.”</p>
+<p>The list of current Internet-Drafts can be accessed at<br>
+<a href="http://www.ietf.org/1id-abstracts.html" target="_blank" rel="noopener">http://www.ietf.org/1id-abstracts.html</a></p>
+<p>The list of Internet-Draft Shadow Directories can be accessed at<br>
+<a href="http://www.ietf.org/shadow.html" target="_blank" rel="noopener">http://www.ietf.org/shadow.html</a></p>
+<p>Distribution of this document is unlimited.</p>
 <p><strong>Copyright Notice</strong></p>
-<p>   Copyright (C) The Internet Society (2003).  All Rights Reserved.</p>
+<p>Copyright © The Internet Society (2003).  All Rights Reserved.</p>
 <p><strong>Abstract</strong></p>
-<p>   This memo documents the methods used by the current peer-to-peer<br>   (P2P) applications to communicate in the presence of middleboxes<br>   such as firewalls and network address translators (NAT). In<br>   addition, the memo suggests guidelines to application designers<br>   and middlebox implementers on the measures they could take to<br>   enable immediate, wide deployment of P2P applications with or<br>   without requiring the use of special proxy, relay or midcom<br>   protocols.  </p>
-<h1><span id="full-copyright-statement">Full Copyright Statement</span></h1><p>   Copyright (C) The Internet Society (2003).  All Rights Reserved.</p>
-<p>   This document and translations of it may be copied and furnished to<br>   others, and derivative works that comment on or otherwise explain it<br>   or assist in its implementation may be prepared, copied, published<br>   and distributed, in whole or in part, without restriction of any<br>   kind, provided that the above copyright notice and this paragraph are<br>   included on all such copies and derivative works.  However, this<br>   document itself may not be modified in any way, such as by removing<br>   the copyright notice or references to the Internet Society or other<br>   Internet organizations, except as needed for the purpose of<br>   developing Internet standards in which case the procedures for<br>   copyrights defined in the Internet Standards process must be<br>   followed, or as required to translate it into languages other than<br>   English.</p>
-<p>   The limited permissions granted above are perpetual and will not be<br>   revoked by the Internet Society or its successors or assigns.</p>
-<p>   This document and the information contained herein is provided on an<br>   “AS IS” basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING<br>   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING<br>   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION<br>   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF<br>   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.</p>
+<p>This memo documents the methods used by the current peer-to-peer<br>
+(P2P) applications to communicate in the presence of middleboxes<br>
+such as firewalls and network address translators (NAT). In<br>
+addition, the memo suggests guidelines to application designers<br>
+and middlebox implementers on the measures they could take to<br>
+enable immediate, wide deployment of P2P applications with or<br>
+without requiring the use of special proxy, relay or midcom<br>
+protocols.</p>
+<h1 id="Full-Copyright-Statement">Full Copyright Statement</h1>
+<p>Copyright © The Internet Society (2003).  All Rights Reserved.</p>
+<p>This document and translations of it may be copied and furnished to<br>
+others, and derivative works that comment on or otherwise explain it<br>
+or assist in its implementation may be prepared, copied, published<br>
+and distributed, in whole or in part, without restriction of any<br>
+kind, provided that the above copyright notice and this paragraph are<br>
+included on all such copies and derivative works.  However, this<br>
+document itself may not be modified in any way, such as by removing<br>
+the copyright notice or references to the Internet Society or other<br>
+Internet organizations, except as needed for the purpose of<br>
+developing Internet standards in which case the procedures for<br>
+copyrights defined in the Internet Standards process must be<br>
+followed, or as required to translate it into languages other than<br>
+English.</p>
+<p>The limited permissions granted above are perpetual and will not be<br>
+revoked by the Internet Society or its successors or assigns.</p>
+<p>This document and the information contained herein is provided on an<br>
+“AS IS” basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING<br>
+TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING<br>
+BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION<br>
+HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF<br>
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.</p>
 
-                    
-                    <!-- Tags Bottom -->
-                    
-
-                    <!-- Comments -->
-                    
-
-
-
-                </div>
-                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
-                    
-                    <hr class="dn-l mw4 black-50 mt5">
-                    
-                    <!-- Widget 1: About -->
-                    <div class="mt5 mt0-l">
-    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
-        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
-            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="Chunhui Guo">
-        </div>
-        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
-            My name is Chunhui guo and this is my blog.<br>I am a software engineer and CTO.<br> I currently work in Beijing And Weifang China, hit me up if you are in the region.
-        </div>
-    </article>
-</div>
-
-                    <hr class="dn-l mw4 black-50 mt5">
-                    
-                    <!-- Widget 2: Categories -->
-                    
-
-                    <!-- Widget 3: Recent Posts -->
-                    <div class="mt5 tc tl-l">
-    <h3>Recent Posts</h3>
-    
-        <p>
-            <a href="/2019/06/11/Peer-to-Peer_P2P_communication_across_middleboxes/">Peer-to-Peer (P2P) communication across middleboxe</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/23/install-nginx-redhat-5x/">在RedHat 5.6 x64下安装Nginx</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/22/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-2/">如果你的服务器不幸被黑，重要数据落入黑客手中（2）</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</a>
-        </p>
-    
-        <p>
-            <a href="/2019/04/24/create-your-blog-with-hexo/">用hexo创建你的个人博客--快速入门</a>
-        </p>
-    
-</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Footer -->
-<div class="bg-1 ph2 ph5-ns pv5">
-        <div class="mv8">
-            <div class="center tc">
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
-                            <i class="fa fa-facebook"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
-                            <i class="fa fa-dribbble"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
-                            <i class="fa fa-google-plus"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
-                            <i class="fa fa-behance"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
-                            <i class="fa fa-500px"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
-                            <i class="fa fa-envelope"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
-                            <i class="fa fa-rss"></i>
-                        </a>
-                    </div>
-                
-            </div>
-            <div class="f6 f5-ns center tc white pt5 fw3">
-                @Untitled. All right reserved | Design & Hexo <a class="link dim white" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-            </div>
-        </div>
+      <p><strong>欢迎关注公众号：程序与算法</strong></p>
+<p><img src="/images/wx-mp-png/stand.png" alt="程序与算法"></p>
     </div>
 
-<!-- After Footer -->
-<!-- Disqus Comments -->
+  </article>
+  <div class="toc-container">
+    
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1.Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Terminology"><span class="toc-text">2. Terminology</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Network-address-translators-in-turn-have-two-main-varieties"><span class="toc-text">Network address translators in turn have two main varieties:</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Basic-NAT"><span class="toc-text">Basic NAT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Network-Address-Port-Translator-NAPT"><span class="toc-text">Network Address&#x2F;Port Translator (NAPT)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cone-NAT"><span class="toc-text">Cone NAT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symmetric-NAT"><span class="toc-text">Symmetric NAT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Full-Cone-NAT"><span class="toc-text">Full Cone NAT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Restricted-Cone-NAT"><span class="toc-text">Restricted Cone NAT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Port-Restricted-Cone-NAT"><span class="toc-text">Port-Restricted Cone NAT</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Techniques-for-P2P-Communication-over-middleboxes"><span class="toc-text">3. Techniques for P2P Communication over middleboxes</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Relaying"><span class="toc-text">3.1. Relaying</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-Connection-reversal"><span class="toc-text">3.2. Connection reversal</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-UDP-hole-punching"><span class="toc-text">3.3. UDP hole punching</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-1-Peers-behind-different-NATs"><span class="toc-text">3.3.1. Peers behind different NATs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-2-Peers-behind-the-same-NAT"><span class="toc-text">3.3.2. Peers behind the same NAT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-3-Peers-separated-by-multiple-NATs"><span class="toc-text">3.3.3. Peers separated by multiple NATs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-4-Consistent-port-bindings"><span class="toc-text">3.3.4. Consistent port bindings</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-UDP-port-number-prediction"><span class="toc-text">3.4. UDP port number prediction</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Application-design-guidelines"><span class="toc-text">4. Application design guidelines</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-What-works-with-P2P-middleboxes"><span class="toc-text">4.1. What works with P2P middleboxes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Peers-behind-the-same-NAT"><span class="toc-text">4.2. Peers behind the same NAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-Peer-discovery"><span class="toc-text">4.3. Peer discovery</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-TCP-P2P-applications"><span class="toc-text">4.4. TCP P2P applications</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-Use-of-midcom-protocol"><span class="toc-text">4.5. Use of midcom protocol</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-NAT-Design-Guidelines"><span class="toc-text">5. NAT Design Guidelines</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-Deprecate-the-use-of-symmetric-NATs"><span class="toc-text">5.1. Deprecate the use of symmetric NATs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-Add-incremental-cone-NAT-support-to-symmetric-NAT-devices"><span class="toc-text">5.2. Add incremental cone-NAT support to symmetric NAT devices</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-Maintain-consistent-port-bindings-for-UDP-ports"><span class="toc-text">5.3. Maintain consistent port bindings for UDP ports</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-1-Preserving-port-numbers"><span class="toc-text">5.3.1. Preserving port numbers</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-Maintaining-consistent-port-bindings-for-TCP-ports"><span class="toc-text">5.4. Maintaining consistent port bindings for TCP ports</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-5-Large-timeout-for-P2P-applications"><span class="toc-text">5.5. Large timeout for P2P applications</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-6-Support-loopback-translation"><span class="toc-text">5.6. Support loopback translation</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Security-Considerations"><span class="toc-text">6. Security Considerations</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-IP-address-aliasing"><span class="toc-text">6.1. IP address aliasing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-Denial-of-service-attacks"><span class="toc-text">6.2. Denial-of-service attacks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-Man-in-the-middle-attacks"><span class="toc-text">6.3. Man-in-the-middle attacks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-Impact-on-middlebox-security"><span class="toc-text">6.4. Impact on middlebox security</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-Acknowledgments"><span class="toc-text">7. Acknowledgments</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-References"><span class="toc-text">8. References</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-Normative-references"><span class="toc-text">8.1. Normative references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-Informational-references"><span class="toc-text">8.2. Informational references</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-Author’s-Address"><span class="toc-text">9. Author’s Address</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Status-of-this-Memo"><span class="toc-text">Status of this Memo</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Full-Copyright-Statement"><span class="toc-text">Full Copyright Statement</span></a></li></ol>
+  </div>
 
+
+  </div>
+
+</div>
+
+<div class="copyright">
+    <span>本作品采用</span>
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">知识共享署名 4.0 国际许可协议</a>
+    <span>进行许可。 转载时请注明原文链接。</span>
+</div>
+
+
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2019/05/23/install-nginx-redhat-5x/" rel="next" title="在RedHat 5.6 x64下安装Nginx">
+          在RedHat 5.6 x64下安装Nginx
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+          
+          <a href="/2020/03/06/linux-mac-ssh-without-password/" rel="prev" title="linux-mac系统免密登录和复制文件的设置方法">
+            linux-mac系统免密登录和复制文件的设置方法
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+
+    </div>
+
+    
+
+  </div>
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+        <a class="bottom-item" href="http://www.w3c0.com" target="_blank">w3c</a> |
+        <a class="bottom-item" href="/">友情链接</a> |
+        <a class="bottom-item" href="https://hexo.io" target="_blank">Powered by hexo</a> |
+        <!-- <a class="bottom-item" href="https://github.com/fooying/hexo-theme-xoxo-plus" target="_blank">Theme xoxo-plus</a> | -->
+        <!-- <a class="bottom-item" href="/atom.xml">订阅</a> -->
+    </div>
+</footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+  
+<script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+</script>
 
 
 </body>
-
 </html>

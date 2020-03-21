@@ -1,296 +1,366 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
 
-<!-- Head tag -->
-<head><meta name="generator" content="Hexo 3.8.0">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
 
-    <!--Description-->
+  
+    <meta name="keywords" content="linux,redhat,nginx," />
+  
+
+  
+    <meta name="description" content="分享程序开发、架构设计以及算法相关的知识、经验、技巧，也顺便分享一些项目管理、操作系统,系统运维、网络等相关知识。" />
+  
+
+  
+  <link rel="icon" type="image/x-icon" href="/images/footer-logo.png">
+  
+  <title>在RedHat 5.6 x64下安装Nginx [ 程序与算法 - 郭春辉的博客 - ]</title>
+  
+    <!-- stylesheets list from config.yml -->
     
-        <meta name="description" content="有一台客户服务器所安装的系统比较老，据说无法安装Nginx，今天有点时间，特意看了一下顺手解决之。
-1.老版本linux的问题
-版本适配问题；
-yum源失效问题，无法使用yum安装；
-无法安装GCC等等
-
-2. yum安装方式删除原有的yum软件包
-1rpm -aq|grep yum|xargs r">
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
     
-
-    <!--Author-->
+      <link rel="stylesheet" href="/css/xoxo.css">
     
-        <meta name="author" content="Chunhui Guo">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="在RedHat 5.6 x64下安装Nginx">
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="坚持就是胜利，剩者为王">
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article">
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary">
-    
-
-    <!-- Title -->
-    
-    <title>在RedHat 5.6 x64下安装Nginx - 坚持就是胜利，剩者为王</title>
-
-    <!-- Tachyons Core CSS -->
-    <link rel="stylesheet" href="//unpkg.com/tachyons/css/tachyons.min.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
-    
-
-
-</head>
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
 
 
 <body>
-
-<!-- Main Content -->
-<!-- Banner -->
-<!-- Banner -->
-<div class="w-100 bg-1 ph5-ns ph3 text-light">
+  <div class="nav-container">
+    <nav class="home-menu pure-menu pure-menu-horizontal">
+  <a class="pure-menu-heading" href="/">
     
-    <nav class="db dt-l w-100 mw8 center border-box pv3">
-        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="坚持就是胜利，剩者为王">
-            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="坚持就是胜利，剩者为王">
-        </a>
-        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/" title="Home">
-                    Home
-                </a>
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/archives" title="Archives">
-                    Archives
-                </a>
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" href="/2019/04/21/about/" title="About">
-                    About
-                </a>
-            
-        </div>
-    </nav>
+    <span class="title" style="text-transform:none">程序与算法 - 郭春辉的博客 -</span>
+  </a>
 
-    <!-- Title -->
-    <div class="w-100 mw8 center vh-40 dt">
-        <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">在RedHat 5.6 x64下安装Nginx</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2019-05-23</p>
-        </div>
-    </div>
+  <ul class="pure-menu-list clearfix">
+      
+          
+            
+              <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/archives" class="pure-menu-link">文章</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/categories" class="pure-menu-link">分类</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+            
+          
+      
+  </ul>
+   
+</nav>
 
-    <!-- Icon -->
-    <div class="relative w-100 mw8 center white dn dn-m db-ns">
-        <i class="header-icon fa fa-file-text-o"></i>
-    </div>
-</div>
+  </div>
 
-<!-- Content -->
-<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
-    <div class="content">
-        <div class="mw8 center">
-            <div class="cf">
-                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
-                    <!-- Tags Vertical -->
-                    
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <div class="post-container">
+  <article class="post" id="post">
+    <header class="post-header text-center">
+      <h1 class="title">
+        在RedHat 5.6 x64下安装Nginx
+      </h1>
+      <span>
+        
+        <time class="time" datetime="2019-05-23T11:04:21.000Z">
+        2019-05-23
+      </time>
+        
+      </span>
+      <span class="slash">/</span>
+      <span class="post-meta">
+      <span class="post-tags">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redhat/" rel="tag">redhat</a></li></ul>
+      </span>
+    </span>
+      <span class="slash">/</span>
+      <span class="read">
+      <span id="busuanzi_value_page_pv"></span> 点击
+    </span>
+      <span class="slash">/</span>
+      <span class="read">阅读耗时 6 分钟</span>
+    </header>
 
-                    <!-- Main Post Content -->
-                    <p>　　有一台客户服务器所安装的系统比较老，据说无法安装Nginx，今天有点时间，特意看了一下顺手解决之。</p>
-<h2 id="1-老版本linux的问题"><a href="#1-老版本linux的问题" class="headerlink" title="1.老版本linux的问题"></a>1.老版本linux的问题</h2><ul>
+    <div class="post-content">
+      <p>有一台客户服务器所安装的系统比较老，据说无法安装Nginx，今天有点时间，特意看了一下顺手解决之。</p>
+<h2 id="1-老版本linux的问题">1.老版本linux的问题</h2>
+<ul>
 <li>版本适配问题；</li>
 <li>yum源失效问题，无法使用yum安装；</li>
 <li>无法安装GCC等等</li>
 </ul>
-<h2 id="2-yum安装方式"><a href="#2-yum安装方式" class="headerlink" title="2. yum安装方式"></a>2. yum安装方式</h2><p><strong>删除原有的yum软件包</strong></p>
+<h2 id="2-yum安装方式">2. yum安装方式</h2>
+<p><strong>删除原有的yum软件包</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -aq|grep yum|xargs rpm -e --nodeps</span><br></pre></td></tr></table></figure>
 <p><strong>下载软件包</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://vault.centos.org/5.6/os/x86_64/CentOS/yum-3.2.22-33.el5.centos.noarch.rpm</span><br><span class="line">wget http://vault.centos.org/5.6/os/x86_64/CentOS/yum-metadata-parser-1.1.2-3.el5.centos.x86_64.rpm</span><br><span class="line">wget http://vault.centos.org/5.6/os/x86_64/CentOS/yum-fastestmirror-1.1.16-14.el5.centos.1.noarch.rpm</span><br><span class="line">wget http://vault.centos.org/5.6/os/x86_64/CentOS/python-iniparse-0.2.3-4.el5.noarch.rpm</span><br><span class="line">wget http://vault.centos.org/5.6/os/x86_64/CentOS/centos-release-5-6.el5.centos.1.x86_64.rpm</span><br><span class="line">wget http://vault.centos.org/5.6/os/x86_64/CentOS/centos-release-notes-5.6-0.x86_64.rpm</span><br></pre></td></tr></table></figure>
-<p><strong>貌似除了<a href="http://vault.centos.org" target="_blank" rel="noopener">http://vault.centos.org</a> 其他地方都找不到相应的包了。</strong></p>
-<p><strong>备份原配置文件</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo  /etc/yum.repos.d/CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure></p>
-<p><strong>创建新配置文件</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/yum.repos.d/CentOS-Base.repo</span><br></pre></td></tr></table></figure></p>
-<p>输入以下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line"># If the mirrorlist= does not work for you, as a fall back you can try the</span><br><span class="line"># remarked out baseurl= line instead.</span><br><span class="line">#</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line">[base]</span><br><span class="line">name=CentOS-$releasever - Base</span><br><span class="line">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=os</span><br><span class="line">#baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/</span><br><span class="line">baseurl=http://vault.centos.org/5.6/os/$basearch/</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5</span><br><span class="line"></span><br><span class="line">#released updates</span><br><span class="line">[updates]</span><br><span class="line">name=CentOS-$releasever - Updates</span><br><span class="line">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=updates</span><br><span class="line">#baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/</span><br><span class="line">baseurl=http://vault.centos.org/5.6/updates/$basearch/</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5</span><br><span class="line"></span><br><span class="line">#additional packages that may be useful</span><br><span class="line">[extras]</span><br><span class="line">name=CentOS-$releasever - Extras</span><br><span class="line">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=extras</span><br><span class="line">#baseurl=http://mirror.centos.org/centos/$releasever/extras/$basearch/</span><br><span class="line">baseurl=http://vault.centos.org/5.6/extras/$basearch/</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5</span><br><span class="line"></span><br><span class="line">#additional packages that extend functionality of existing packages</span><br><span class="line">[centosplus]</span><br><span class="line">name=CentOS-$releasever - Plus</span><br><span class="line">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=centosplus</span><br><span class="line">#baseurl=http://mirror.centos.org/centos/$releasever/centosplus/$basearch/</span><br><span class="line">baseurl=http://vault.centos.org/5.6/centosplus/$basearch/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=0</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5</span><br><span class="line"></span><br><span class="line">#contrib - packages by Centos Users</span><br><span class="line">[contrib]</span><br><span class="line">name=CentOS-$releasever - Contrib</span><br><span class="line">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=contrib</span><br><span class="line">#baseurl=http://mirror.centos.org/centos/$releasever/contrib/$basearch/</span><br><span class="line">baseurl=http://vault.centos.org/5.6/contrib/$basearch/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=0</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5</span><br></pre></td></tr></table></figure></p>
-<p><strong>安装相关软件</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh --force *.rpm</span><br></pre></td></tr></table></figure></p>
-<p><strong>清理，生成缓存</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all </span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure></p>
-<p>此时，yum可用了，你可以做你想做的事啦…….,例如</p>
+<p><strong>貌似除了http://vault.centos.org 其他地方都找不到相应的包了。</strong></p>
+<p><strong>备份原配置文件</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo  /etc/yum.repos.d/CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
+<p><strong>创建新配置文件</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/yum.repos.d/CentOS-Base.repo</span><br></pre></td></tr></table></figure>
+<p>输入以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line"># If the mirrorlist&#x3D; does not work for you, as a fall back you can try the</span><br><span class="line"># remarked out baseurl&#x3D; line instead.</span><br><span class="line">#</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line">[base]</span><br><span class="line">name&#x3D;CentOS-$releasever - Base</span><br><span class="line">#mirrorlist&#x3D;http:&#x2F;&#x2F;mirrorlist.centos.org&#x2F;?release&#x3D;$releasever&amp;arch&#x3D;$basearch&amp;repo&#x3D;os</span><br><span class="line">#baseurl&#x3D;http:&#x2F;&#x2F;mirror.centos.org&#x2F;centos&#x2F;$releasever&#x2F;os&#x2F;$basearch&#x2F;</span><br><span class="line">baseurl&#x3D;http:&#x2F;&#x2F;vault.centos.org&#x2F;5.6&#x2F;os&#x2F;$basearch&#x2F;</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">gpgkey&#x3D;file:&#x2F;&#x2F;&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F;RPM-GPG-KEY-CentOS-5</span><br><span class="line"></span><br><span class="line">#released updates</span><br><span class="line">[updates]</span><br><span class="line">name&#x3D;CentOS-$releasever - Updates</span><br><span class="line">#mirrorlist&#x3D;http:&#x2F;&#x2F;mirrorlist.centos.org&#x2F;?release&#x3D;$releasever&amp;arch&#x3D;$basearch&amp;repo&#x3D;updates</span><br><span class="line">#baseurl&#x3D;http:&#x2F;&#x2F;mirror.centos.org&#x2F;centos&#x2F;$releasever&#x2F;updates&#x2F;$basearch&#x2F;</span><br><span class="line">baseurl&#x3D;http:&#x2F;&#x2F;vault.centos.org&#x2F;5.6&#x2F;updates&#x2F;$basearch&#x2F;</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">gpgkey&#x3D;file:&#x2F;&#x2F;&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F;RPM-GPG-KEY-CentOS-5</span><br><span class="line"></span><br><span class="line">#additional packages that may be useful</span><br><span class="line">[extras]</span><br><span class="line">name&#x3D;CentOS-$releasever - Extras</span><br><span class="line">#mirrorlist&#x3D;http:&#x2F;&#x2F;mirrorlist.centos.org&#x2F;?release&#x3D;$releasever&amp;arch&#x3D;$basearch&amp;repo&#x3D;extras</span><br><span class="line">#baseurl&#x3D;http:&#x2F;&#x2F;mirror.centos.org&#x2F;centos&#x2F;$releasever&#x2F;extras&#x2F;$basearch&#x2F;</span><br><span class="line">baseurl&#x3D;http:&#x2F;&#x2F;vault.centos.org&#x2F;5.6&#x2F;extras&#x2F;$basearch&#x2F;</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">gpgkey&#x3D;file:&#x2F;&#x2F;&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F;RPM-GPG-KEY-CentOS-5</span><br><span class="line"></span><br><span class="line">#additional packages that extend functionality of existing packages</span><br><span class="line">[centosplus]</span><br><span class="line">name&#x3D;CentOS-$releasever - Plus</span><br><span class="line">#mirrorlist&#x3D;http:&#x2F;&#x2F;mirrorlist.centos.org&#x2F;?release&#x3D;$releasever&amp;arch&#x3D;$basearch&amp;repo&#x3D;centosplus</span><br><span class="line">#baseurl&#x3D;http:&#x2F;&#x2F;mirror.centos.org&#x2F;centos&#x2F;$releasever&#x2F;centosplus&#x2F;$basearch&#x2F;</span><br><span class="line">baseurl&#x3D;http:&#x2F;&#x2F;vault.centos.org&#x2F;5.6&#x2F;centosplus&#x2F;$basearch&#x2F;</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">enabled&#x3D;0</span><br><span class="line">gpgkey&#x3D;file:&#x2F;&#x2F;&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F;RPM-GPG-KEY-CentOS-5</span><br><span class="line"></span><br><span class="line">#contrib - packages by Centos Users</span><br><span class="line">[contrib]</span><br><span class="line">name&#x3D;CentOS-$releasever - Contrib</span><br><span class="line">#mirrorlist&#x3D;http:&#x2F;&#x2F;mirrorlist.centos.org&#x2F;?release&#x3D;$releasever&amp;arch&#x3D;$basearch&amp;repo&#x3D;contrib</span><br><span class="line">#baseurl&#x3D;http:&#x2F;&#x2F;mirror.centos.org&#x2F;centos&#x2F;$releasever&#x2F;contrib&#x2F;$basearch&#x2F;</span><br><span class="line">baseurl&#x3D;http:&#x2F;&#x2F;vault.centos.org&#x2F;5.6&#x2F;contrib&#x2F;$basearch&#x2F;</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">enabled&#x3D;0</span><br><span class="line">gpgkey&#x3D;file:&#x2F;&#x2F;&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F;RPM-GPG-KEY-CentOS-5</span><br></pre></td></tr></table></figure>
+<p><strong>安装相关软件</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh --force *.rpm</span><br></pre></td></tr></table></figure>
+<p><strong>清理，生成缓存</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all </span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+<p>此时，yum可用了，你可以做你想做的事啦…,例如</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
-<h2 id="3-rpm安装方式"><a href="#3-rpm安装方式" class="headerlink" title="3.rpm安装方式"></a>3.rpm安装方式</h2><p>如果觉得上述方式实在太啰嗦，则用rpm包安装吧，三个字：快好省。</p>
-<p><strong>下载：</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://nginx.org/packages/rhel/5/x86_64/RPMS/nginx-1.10.3-1.el5.ngx.x86_64.rpm</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-rpm安装方式">3.rpm安装方式</h2>
+<p>如果觉得上述方式实在太啰嗦，则用rpm包安装吧，三个字：快好省。</p>
+<p><strong>下载：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://nginx.org/packages/rhel/5/x86_64/RPMS/nginx-1.10.3-1.el5.ngx.x86_64.rpm</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>注：nginx-1.10.3版本是RedHat 5.6下所能支持的最大Nginx版本。</p>
 </blockquote>
-<p><strong>安装：</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh nginx-1.10.3-1.el5.ngx.x86_64.rpm</span><br></pre></td></tr></table></figure></p>
+<p><strong>安装：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh nginx-1.10.3-1.el5.ngx.x86_64.rpm</span><br></pre></td></tr></table></figure>
 <p><strong>运行后会提示：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">warning: nginx-1.10.3-1.el5.ngx.x86_64.rpm: Header V3 RSA/SHA1 signature: NOKEY, key ID 7bd9bf62</span><br><span class="line">Preparing...                ########################################### [100%]</span><br><span class="line">   1:nginx                  ########################################### [100%]</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Thanks for using nginx!</span><br><span class="line"></span><br><span class="line">Please find the official documentation for nginx here:</span><br><span class="line">* http://nginx.org/en/docs/</span><br><span class="line"></span><br><span class="line">Commercial subscriptions for nginx are available on:</span><br><span class="line">* http://nginx.com/products/</span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">warning: nginx-1.10.3-1.el5.ngx.x86_64.rpm: Header V3 RSA&#x2F;SHA1 signature: NOKEY, key ID 7bd9bf62</span><br><span class="line">Preparing...                ########################################### [100%]</span><br><span class="line">   1:nginx                  ########################################### [100%]</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Thanks for using nginx!</span><br><span class="line"></span><br><span class="line">Please find the official documentation for nginx here:</span><br><span class="line">* http:&#x2F;&#x2F;nginx.org&#x2F;en&#x2F;docs&#x2F;</span><br><span class="line"></span><br><span class="line">Commercial subscriptions for nginx are available on:</span><br><span class="line">* http:&#x2F;&#x2F;nginx.com&#x2F;products&#x2F;</span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
 <p>表示安装成功。</p>
 <p><strong>Nginx目录</strong></p>
-<p>用此种方式安装的Nginx程序所在目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/nginx</span><br></pre></td></tr></table></figure></p>
-<p>配置文件目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/nginx</span><br></pre></td></tr></table></figure></p>
-
-                    
-                    <!-- Tags Bottom -->
-                    
-
-                    <!-- Comments -->
-                    
-
-
-
-                </div>
-                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
-                    
-                    <hr class="dn-l mw4 black-50 mt5">
-                    
-                    <!-- Widget 1: About -->
-                    <div class="mt5 mt0-l">
-    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
-        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
-            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="Chunhui Guo">
-        </div>
-        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
-            My name is Chunhui guo and this is my blog.<br>I am a software engineer and CTO.<br> I currently work in Beijing And Weifang China, hit me up if you are in the region.
-        </div>
-    </article>
-</div>
-
-                    <hr class="dn-l mw4 black-50 mt5">
-                    
-                    <!-- Widget 2: Categories -->
-                    
-
-                    <!-- Widget 3: Recent Posts -->
-                    <div class="mt5 tc tl-l">
-    <h3>Recent Posts</h3>
-    
-        <p>
-            <a href="/2019/06/11/Peer-to-Peer_P2P_communication_across_middleboxes/">Peer-to-Peer (P2P) communication across middleboxe</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/23/install-nginx-redhat-5x/">在RedHat 5.6 x64下安装Nginx</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/22/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-2/">如果你的服务器不幸被黑，重要数据落入黑客手中（2）</a>
-        </p>
-    
-        <p>
-            <a href="/2019/05/21/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-1/">如果你的服务器不幸被黑，重要数据落入黑客手中（1）</a>
-        </p>
-    
-        <p>
-            <a href="/2019/04/24/create-your-blog-with-hexo/">用hexo创建你的个人博客--快速入门</a>
-        </p>
-    
-</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Footer -->
-<div class="bg-1 ph2 ph5-ns pv5">
-        <div class="mv8">
-            <div class="center tc">
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
-                            <i class="fa fa-facebook"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
-                            <i class="fa fa-dribbble"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
-                            <i class="fa fa-google-plus"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
-                            <i class="fa fa-behance"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
-                            <i class="fa fa-500px"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
-                            <i class="fa fa-envelope"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
-                            <i class="fa fa-rss"></i>
-                        </a>
-                    </div>
-                
-            </div>
-            <div class="f6 f5-ns center tc white pt5 fw3">
-                @Untitled. All right reserved | Design & Hexo <a class="link dim white" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-            </div>
-        </div>
+<p>用此种方式安装的Nginx程序所在目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;sbin&#x2F;nginx</span><br></pre></td></tr></table></figure>
+<p>配置文件目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;etc&#x2F;nginx</span><br></pre></td></tr></table></figure>
+      <p><strong>欢迎关注公众号：程序与算法</strong></p>
+<p><img src="/images/wx-mp-png/stand.png" alt="程序与算法"></p>
     </div>
 
-<!-- After Footer -->
-<!-- Disqus Comments -->
+  </article>
+  <div class="toc-container">
+    
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-老版本linux的问题"><span class="toc-text">1.老版本linux的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-yum安装方式"><span class="toc-text">2. yum安装方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-rpm安装方式"><span class="toc-text">3.rpm安装方式</span></a></li></ol>
+  </div>
 
+
+  </div>
+
+</div>
+
+<div class="copyright">
+    <span>本作品采用</span>
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">知识共享署名 4.0 国际许可协议</a>
+    <span>进行许可。 转载时请注明原文链接。</span>
+</div>
+
+
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2019/05/22/if-your-server-is-unluckily-hacked-and-important-data-falls-into-the-hands-of-hackers-2/" rel="next" title="如果你的服务器不幸被黑，重要数据落入黑客手中（2）">
+          如果你的服务器不幸被黑，重要数据落入黑客手中（2）
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+          
+          <a href="/2019/06/11/Peer-to-Peer_P2P_communication_across_middleboxes/" rel="prev" title="Peer-to-Peer (P2P) communication across middleboxes">
+            Peer-to-Peer (P2P) communication across middleboxes
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+
+    </div>
+
+    
+
+  </div>
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+        <a class="bottom-item" href="http://www.w3c0.com" target="_blank">w3c</a> |
+        <a class="bottom-item" href="/">友情链接</a> |
+        <a class="bottom-item" href="https://hexo.io" target="_blank">Powered by hexo</a> |
+        <!-- <a class="bottom-item" href="https://github.com/fooying/hexo-theme-xoxo-plus" target="_blank">Theme xoxo-plus</a> | -->
+        <!-- <a class="bottom-item" href="/atom.xml">订阅</a> -->
+    </div>
+</footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+  
+<script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+</script>
 
 
 </body>
-
 </html>
