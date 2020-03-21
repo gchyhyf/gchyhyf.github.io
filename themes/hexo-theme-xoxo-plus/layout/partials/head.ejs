@@ -1,6 +1,6 @@
 <%
 var pageTitle = page.title || '';
-if (is_archive()) pageTitle = 'archives';
+if (is_archive()) pageTitle = '全部文章';
 if (is_tag()) pageTitle = 'tag: ' + page.tag;
 if (is_category()) pageTitle = 'category: ' + page.category;
 if (is_month()) pageTitle += ': ' + page.month + '/' + page.year;
@@ -15,7 +15,7 @@ if (is_home()) pageTitle+= config.subtitle;
   <meta name="theme-color" content="#202020"/>
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
-  
+
   <% if (page.tags && page.tags.length) { %>
     <meta name="keywords" content="<% page.tags.forEach(function(tag) { %><%= tag.name %>,<% }); %>" />
   <% } else { %>
@@ -27,7 +27,7 @@ if (is_home()) pageTitle+= config.subtitle;
   <% } else {  %>
     <meta name="description" content="<%= page.description || page.title || (config.title + ',' + config.subtitle) %>" />
   <% } %>
-  
+
   <% if(theme.favicon) {%>
   <link rel="icon" type="image/x-icon" href="/images/<%=theme.favicon%>">
   <% } %>
