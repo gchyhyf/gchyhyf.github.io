@@ -1,0 +1,473 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+  
+    <meta name="keywords" content="文件管理,代码管理,文件撤消,文件恢复," />
+  
+
+  
+    <meta name="description" content="分享程序开发、架构设计以及算法相关的知识、经验、技巧，也顺便分享一些项目管理、操作系统,系统运维、网络等相关知识。" />
+  
+
+  
+  <link rel="icon" type="image/x-icon" href="/images/footer-logo.png">
+  
+  <title>Git文件管理从入门到精通系统系列：安装配置、基本使用与撤消恢复 [ 程序与算法 - 郭春辉的博客 - ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+    
+      <link rel="stylesheet" href="/css/xoxo.css">
+    
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <div class="nav-container">
+    <nav class="home-menu pure-menu pure-menu-horizontal">
+  <a class="pure-menu-heading" href="/">
+    
+    <span class="title" style="text-transform:none">程序与算法 - 郭春辉的博客 -</span>
+  </a>
+
+  <ul class="pure-menu-list clearfix">
+      
+          
+            
+              <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/archives" class="pure-menu-link">文章</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/categories" class="pure-menu-link">分类</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+            
+          
+      
+          
+            
+              <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+            
+          
+      
+  </ul>
+   
+</nav>
+
+  </div>
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <div class="post-container">
+  <article class="post" id="post">
+    <header class="post-header text-center">
+      <h1 class="title">
+        Git文件管理从入门到精通系统系列：安装配置、基本使用与撤消恢复
+      </h1>
+      <span>
+        
+        <time class="time" datetime="2020-03-26T13:26:18.000Z">
+        2020-03-26
+      </time>
+        
+      </span>
+      <span class="slash">/</span>
+      <span class="post-meta">
+      <span class="post-tags">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86/" rel="tag">代码管理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D/" rel="tag">文件恢复</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%96%87%E4%BB%B6%E6%92%A4%E6%B6%88/" rel="tag">文件撤消</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/" rel="tag">文件管理</a></li></ul>
+      </span>
+    </span>
+      <span class="slash">/</span>
+      <span class="read">
+      <span id="busuanzi_value_page_pv"></span> 点击
+    </span>
+      <span class="slash">/</span>
+      <span class="read">阅读耗时 23 分钟</span>
+    </header>
+
+    <div class="post-content">
+      <h1 id="1-Git起步">1.Git起步</h1>
+<h2 id="1-1GIT使用背景知识（必读）">1.1GIT使用背景知识（必读）</h2>
+<p>**git是什么？  **<br>
+Git是目前世界上最先进的、开源的、分布式的版本控制系统，注意这里面最重要的一个词：<strong>分布式</strong>。<br>
+这意味着，每个人都可以通过git独立工作并且电脑上有自己的独立仓库，当需要协同工作时，以某种方式进行协作即可。<br>
+git不仅可以用来管理软件源代码，也可以用来管理各类文档，尽管它被大多数程序员用来管理程序代码。</p>
+<p><strong>git协同工作的方式</strong><br>
+通过本地–&gt;中央（远程）仓库，中央（远程）仓库–&gt;本地的方法进行同步。具体来说，就是一部分团队成员先在本地工作，然后推送（同步）至中央（远程）仓库，而另一部分团队成员再从中央仓库拉取（同步）至本地（远程）仓库。</p>
+<p><strong>git使用的相关概念</strong></p>
+<ul>
+<li><strong>中央（远程）仓库:</strong> 方便团队协作的中介和枢纽，也作为一个组织进行资料（如代码）统一管理和备份的必要方式、措施。</li>
+<li><strong>本地仓库：</strong> 团队成员用于本机工作的目录,本地仓库分为三个区域：
+<ul>
+<li>Working Tree：工作目录(也叫Working Area，工作区)，即可以用<code>ls/dir</code>命令可以看到的文件等信息。工作区是对项目的某个版本独立提取出来的内容。 这些从 Git 仓库的压缩数据库中提取出来的文件，放在磁盘上供你使用或修改。</li>
+<li>Stage Area：暂存区域。暂存区是一个文件(即文件Index，保存了下次将要提交的文件列表信息，一般在 Git 仓库目录中。 按照 Git 的术语叫做“索引”，不过一般说法还是叫“暂存区”。</li>
+<li>.git Directory: Git 仓库目录(repository)是 Git 用来保存项目的元数据和对象数据库的地方。 这是 Git 中最重要的部分，从其它计算机克隆仓库时，复制的就是这里的数据。</li>
+</ul>
+</li>
+</ul>
+<p><strong>基本的 Git 工作流程如下：</strong></p>
+<ul>
+<li>在工作区中修改文件。</li>
+<li>将你想要下次提交的更改选择性地暂存，这样只会将更改的部分添加到暂存区。</li>
+<li>提交更新，找到暂存区的文件，将快照永久性存储到 Git 目录。</li>
+</ul>
+<blockquote>
+<p>如果 Git 目录中保存着特定版本的文件，就属于 已提交 状态。 如果文件已修改并放入暂存区，就属于 已暂存 状态。 如果自上次检出后，作了修改但还没有放到暂存区域，就是 已修改 状态。</p>
+</blockquote>
+<h2 id="1-2Git安装">1.2Git安装</h2>
+<p><strong>Ubuntu LINUX</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt install git(git-all)</span></span><br></pre></td></tr></table></figure>
+<p><strong>Centos LINUX</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo yum install git(git-all)</span></span><br></pre></td></tr></table></figure>
+<p><strong>Mac OS</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> brew install git(git-all)</span></span><br></pre></td></tr></table></figure>
+<p><strong>在 Windows 上安装</strong><br>
+在 Windows 上安装 Git 也有几种安装方法。 官方版本可以在 Git 官方网站下载。 打开 <a href="https://git-scm.com/download/win" target="_blank" rel="noopener">https://git-scm.com/download/win</a>，下载会自动开始。 要注意这是一个名为 Git for Windows 的项目（也叫做 msysGit），和 Git 是分别独立的项目；更多信息请访问 <a href="http://msysgit.github.io/" target="_blank" rel="noopener">http://msysgit.github.io/</a>。</p>
+<p>要进行自动安装，你可以使用 <a href="https://chocolatey.org/packages/git" target="_blank" rel="noopener">Git Chocolatey</a> 包。 注意 Chocolatey 包是由社区维护的。</p>
+<p>另一个简单的方法是安装 GitHub Desktop。 该安装程序包含图形化和命令行版本的 Git。 它也能支持 Powershell，提供了稳定的凭证缓存和健全的换行设置。 稍后我们会对这方面有更多了解，现在只要一句话就够了，这些都是你所需要的。 你可以在 GitHub for Windows 网站下载，网址为 <a href="https://desktop.github.com/" target="_blank" rel="noopener">GitHub Desktop</a> 网站。</p>
+<h2 id="1-3Git基本配置设置">1.3Git基本配置设置</h2>
+<p><strong>查看所有的配置以及它们所在的文件：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config --list --show-origin</span></span><br></pre></td></tr></table></figure>
+<p><strong>修改配置文件及路径：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config -f &lt;file&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>用户信息配置</strong><br>
+安装完 Git 之后，要做的第一件事就是设置你的用户名和邮件地址。 这一点很重要，因为每一个 Git 提交都会使用这些信息，它们会写入到你的每一次提交中，不可更改：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config --global user.name <span class="string">"Guo chunhui"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config --global user.email gch@qq.com</span></span><br></pre></td></tr></table></figure>
+<p>再次强调，如果使用了 --global 选项，那么该命令只需要运行一次，因为之后无论你在该系统上做任何事情， Git 都会使用那些信息。 当你想针对特定项目使用不同的用户名称与邮件地址时，可以在那个项目目录下运行没有 --global 选项的命令来配置。</p>
+<p>很多 GUI 工具都会在第一次运行时帮助你配置这些信息。</p>
+<p><strong>文本编辑器</strong><br>
+既然用户信息已经设置完毕，你可以配置默认文本编辑器了，当 Git 需要你输入信息时会调用它。 如果未配置，Git 会使用操作系统默认的文本编辑器，例如vi（windows版本会默认一个类似vi的编辑器) 。</p>
+<p>如果你想使用不同的文本编辑器，例如 Emacs，可以这样做：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config --global core.editor emacs</span></span><br></pre></td></tr></table></figure>
+<p>在 Windows 系统上，如果你想要使用别的文本编辑器，那么必须指定可执行文件的完整路径。 它可能随你的编辑器的打包方式而不同。</p>
+<p>设置windows下默认的记事本作为编辑器代码如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config core.editor notepad</span></span><br></pre></td></tr></table></figure>
+<h1 id="2-创建一个新的本地仓库">2.创建一个新的本地仓库</h1>
+<p><strong>创建测试目录</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir localtest</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> localtest</span></span><br></pre></td></tr></table></figure>
+<p><strong>对目录初始化</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git init</span></span><br><span class="line">---</span><br><span class="line"><span class="meta">#</span><span class="bash">此时应该出现下列信息：</span></span><br><span class="line">Initialized empty Git repository in xxx/localtest/.git</span><br></pre></td></tr></table></figure>
+<p><strong>查看状态</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">On branch master</span><br><span class="line">No commits yet</span><br><span class="line">nothing to commit (create/copy files and use "git add" to track)</span><br></pre></td></tr></table></figure>
+<h1 id="3-文件新增、提交、删除以及撤消">3.文件新增、提交、删除以及撤消</h1>
+<h2 id="3-1创建新文件">3.1创建新文件</h2>
+<p><strong>创建一个文件,并查看状态</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">'hello'</span>&gt;readme</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master  </span><br><span class="line">No commits yet</span><br><span class="line">Untracked files:  </span><br><span class="line">  (use "git add &lt;file&gt;..." to include in what will be committed)  </span><br><span class="line">        readme  </span><br><span class="line">nothing added to commit but untracked files present (use "git add" to track)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意到 Untracked files下方出现了readme文件，这说明readme文件尚未纳入版本管理系统。<br>
+Untracked files的意思是“未跟踪的文件”。</p>
+</blockquote>
+<h2 id="3-2从暂存区中撤消">3.2从暂存区中撤消</h2>
+<p><strong>加入到暂存区,并查看状态</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git add readme</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master  </span><br><span class="line">No commits yet</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git rm --cached &lt;file&gt;..." to unstage)</span><br><span class="line">        new file:   readme</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意<code>new file:   readme</code>这一行，说明readme已经被加入了暂存区。</p>
+</blockquote>
+<p><strong>由于某种原因，现在不想将readme加入暂存区，需要移除</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git rm --cached readme</span></span><br><span class="line">---</span><br><span class="line">rm 'readme'</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master  </span><br><span class="line">No commits yet</span><br><span class="line">Untracked files:  </span><br><span class="line">  (use "git add &lt;file&gt;..." to include in what will be committed)  </span><br><span class="line">        readme  </span><br><span class="line">nothing added to commit but untracked files present (use "git add" to track)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>执行完<code>git rm --cached readme</code>命令后，发现回到了3.1的初始状态。</p>
+</blockquote>
+<h2 id="3-3从本地仓库删除">3.3从本地仓库删除</h2>
+<blockquote>
+<p>由于readme文件只提交了一次，所以无法进行撤消。<br>
+如果需要从本地仓库中移走这个文件，你需要执行的是删除。</p>
+</blockquote>
+<p><strong>从本地仓库中删除</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git rm -- readme</span></span><br><span class="line">---</span><br><span class="line">rm 'readme'</span><br></pre></td></tr></table></figure>
+<p><strong>查看仓库状态</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git reset HEAD &lt;file&gt;..." to unstage)</span><br><span class="line">        deleted:    readme</span><br></pre></td></tr></table></figure>
+<p><strong>提交操作，完成删除操作</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">"test rm file"</span> -- readme</span></span><br><span class="line">---</span><br><span class="line">[master 79cf27c] test rm file</span><br><span class="line"> 1 file changed, 1 deletion(-)</span><br><span class="line"> delete mode 100644 readme</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br></pre></td></tr></table></figure>
+<h2 id="3-4从本地仓库撤消删除">3.4从本地仓库撤消删除</h2>
+<p><strong>查看仓库操作历史记录</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --pretty=oneline</span></span><br><span class="line">---</span><br><span class="line">79cf27c63142370db73b2d7812417618c4634bb2 (HEAD -&gt; master) test rm file</span><br><span class="line">d429425f21866a39f6291c9ab822ce9c0214fb9f test commit and undo</span><br></pre></td></tr></table></figure>
+<p><strong>撤消删除，恢复到我们删除之前的版本</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard HEAD^  <span class="comment"># WINDODOWS 下用 git reset --hard "HEAD^"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --pretty=oneline</span></span><br><span class="line">---</span><br><span class="line">d429425f21866a39f6291c9ab822ce9c0214fb9f (HEAD -&gt; master) test commit and undo</span><br></pre></td></tr></table></figure>
+<h1 id="4-文件修改、比较、撤消">4.文件修改、比较、撤消</h1>
+<h2 id="4-1-新增一个文件learngit-txt文件并修改readme">4.1 新增一个文件learngit.txt文件并修改readme</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">新增文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"How to learn git?"</span>&gt;learngit.txt</span></span><br><span class="line"><span class="meta">#</span><span class="bash">修改文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> Hello World!&gt;readme</span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line">        modified:   readme</span><br><span class="line">Untracked files:</span><br><span class="line">  (use "git add &lt;file&gt;..." to include in what will be committed)</span><br><span class="line">        learngit.txt</span><br><span class="line">no changes added to commit (use "git add" and/or "git commit -a")</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意到 <code>modified:   readme</code>这一行，有这个信息说明文件readme确实被修改过了。</p>
+</blockquote>
+<h2 id="4-2-确认修改的内容是否正确">4.2 确认修改的内容是否正确</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git diff</span></span><br><span class="line">---</span><br><span class="line">diff --git a/readme b/readme</span><br><span class="line">index 30f1577..980a0d5 100644</span><br><span class="line">--- a/readme</span><br><span class="line">+++ b/readme</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-'hello'</span><br><span class="line">+Hello World!</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>-'hello'</code>表示我们移除了，<code>'hello'</code>这几个字符；<br>
+<code>+Hello World!</code>表示我们增加了<code>Hello World!</code>;<br>
+换句话说，将文件readme中的<code>'hello'</code>替换成了<code>Hello World!</code>。</p>
+</blockquote>
+<h2 id="4-3撤消对文件readme的修改">4.3撤消对文件readme的修改</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git checkout -- readme</span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master</span><br><span class="line">Untracked files:</span><br><span class="line">  (use "git add &lt;file&gt;..." to include in what will be committed)</span><br><span class="line">        learngit.txt</span><br></pre></td></tr></table></figure>
+<h2 id="4-4重新修改文件并加入到暂存区">4.4重新修改文件并加入到暂存区</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">重新修改文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> Hello World!&gt;readme</span></span><br><span class="line"><span class="meta">#</span><span class="bash">将所有变更加入暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .</span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git reset HEAD &lt;file&gt;..." to unstage)</span><br><span class="line">        new file:   learngit.txt</span><br><span class="line">        modified:   readme</span><br></pre></td></tr></table></figure>
+<h2 id="4-5将文件从暂存区撤消">4.5将文件从暂存区撤消</h2>
+<p>在3.2节，我们说到文件从暂存区撤消可以使用<code>git rm --cached -- &lt;filename&gt;</code>，如果要撤消所有暂存区的变更，可以执行<code>git rm --cached -- *</code>。</p>
+<blockquote>
+<p>但是！但是！但是！重要的事说三遍：如果暂存区文件全是新增的，这是没有问题的；如果有些文件属于修改操作，当执行<code>git rm --cached</code>操作后，这些文件将变为未控制文件，并在进行commit操作之后，从仓库中移除。</p>
+</blockquote>
+<p><strong>使用<code>git reset</code>命令进行撤消</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">从暂存区撤消单个文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset head readme</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset head learngit.txt</span></span><br><span class="line"><span class="meta">#</span><span class="bash">将所有变更从暂存区撤消</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset head</span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line">        modified:   readme</span><br><span class="line">Untracked files:</span><br><span class="line">  (use "git add &lt;file&gt;..." to include in what will be committed)</span><br><span class="line">        learngit.txt</span><br><span class="line">no changes added to commit (use "git add" and/or "git commit -a")</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>本节介绍的方法，对新增、修改等文件均有效，且内容不会丢失。</p>
+</blockquote>
+<p>#5.文件在工作目录中被删除之后的恢复（撤消）</p>
+<blockquote>
+<p>在工作目录中删除，是指通过操作系统进行删除操作，例如通过del,rm命令。</p>
+</blockquote>
+<h2 id="5-1未添加到暂存区之前删除恢复">5.1未添加到暂存区之前删除恢复</h2>
+<p>分两种情况：</p>
+<ul>
+<li>对于新文件（从未提交到仓库过的文件），删除后的撤消只能依赖于操作系统或第三方软件来处理。</li>
+<li>对于以前已经提交仓库、进行修改过的文件，删除后只能恢复到最后一次提交的内容。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">利用操作系统命令删除</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> rm/del readme  </span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---      </span><br><span class="line">On branch master</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add/rm &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line">        deleted:    readme</span><br><span class="line">Untracked files:</span><br><span class="line">  (use "git add &lt;file&gt;..." to include in what will be committed)</span><br><span class="line">        learngit.txt</span><br><span class="line"><span class="meta">#</span><span class="bash">恢复文件readme</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -- readme</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>最后一步恢复文件readme,但在工作区对文件的所有修改丢失。</p>
+</blockquote>
+<h2 id="5-2添加到暂存区之后删除恢复">5.2添加到暂存区之后删除恢复</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">将所有变更加入暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .  </span></span><br><span class="line"><span class="meta">#</span><span class="bash">利用操作系统命令删除</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> rm/del readme  </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> rm/del learngit.txt</span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---      </span><br><span class="line">On branch master</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git reset HEAD &lt;file&gt;..." to unstage)</span><br><span class="line">        new file:   learngit.txt</span><br><span class="line">        modified:   readme</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add/rm &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line">        deleted:    learngit.txt</span><br><span class="line">        deleted:    readme</span><br><span class="line"><span class="meta">#</span><span class="bash">恢复文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -- readme</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -- learngit.txt    </span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---      </span><br><span class="line">On branch master</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git reset HEAD &lt;file&gt;..." to unstage)</span><br><span class="line">        new file:   learngit.txt</span><br><span class="line">        modified:   readme</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>最后一步不仅在工作区恢复了文件（内容没有丢失），并且文件状态也回到正常状态。</p>
+</blockquote>
+<h2 id="5-3文件提交到仓库后删除恢复">5.3文件提交到仓库后删除恢复</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">将所有变更提交到仓库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">"test add and modify commmit"</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line"><span class="meta">#</span><span class="bash">利用操作系统命令删除</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> rm/del learngit.txt</span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---  </span><br><span class="line">On branch master</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add/rm &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line">        deleted:    learngit.txt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">恢复文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -- learngit.txt         </span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---  </span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br></pre></td></tr></table></figure>
+<h1 id="6-合并提交">6.合并提交</h1>
+<p>有时候我们提交完了才发现漏掉了几个文件没有添加，或者提交信息写错了。 此时，可以运行带有 --amend 选项的提交命令来重新提交：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">新建文件forgotten</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> this is forgotten <span class="built_in">test</span>&gt;forgotten</span></span><br><span class="line"><span class="meta">#</span><span class="bash">添加到暂存区之后删除恢复</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .  </span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看当前提交历史记录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --pretty=oneline</span></span><br><span class="line">--</span><br><span class="line">af6d5646b66d08cb182f626ffaa62e53ee7898c8 (HEAD -&gt; master) test add and modify commmit  </span><br><span class="line">d429425f21866a39f6291c9ab822ce9c0214fb9f test commit and undo</span><br><span class="line"><span class="meta">#</span><span class="bash">将当前暂存区内容合并到最后一次提交</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit --amend --no-edit</span></span><br><span class="line">[master 69e1e2e] test add and modify commmit</span><br><span class="line"> Date: Thu Mar 26 15:02:06 2020 +0800</span><br><span class="line"> 3 files changed, 3 insertions(+), 1 deletion(-)</span><br><span class="line"> create mode 100644 forgotten</span><br><span class="line"> create mode 100644 learngit.txt</span><br><span class="line"><span class="meta"> #</span><span class="bash">再次查看提交历史</span></span><br><span class="line"><span class="meta"> $</span><span class="bash"> git <span class="built_in">log</span> --pretty=oneline</span></span><br><span class="line"> --</span><br><span class="line"> 0e3c4ff5255197d9dfd93549afe1befe2139deb7 (HEAD -&gt; master) test add and modify commmit  </span><br><span class="line"> d429425f21866a39f6291c9ab822ce9c0214fb9f test commit and undo</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>观察上述命令输出的结果，发现提交历史记录仍然是2条，如果上面的<code>git commit --amend</code>命令换成正常提交，则此处会有3条提交历史记录。<br>
+另外，若没有添加<code> --no-edit</code>参数，则会打开一个编辑窗口，可以修改两次提交的信息。</p>
+</blockquote>
+
+      <p><strong>欢迎关注公众号：程序与算法</strong></p>
+<p><img src="/images/wx-mp-png/stand.png" alt="程序与算法"></p>
+    </div>
+
+  </article>
+  <div class="toc-container">
+    
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Git起步"><span class="toc-text">1.Git起步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1GIT使用背景知识（必读）"><span class="toc-text">1.1GIT使用背景知识（必读）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2Git安装"><span class="toc-text">1.2Git安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3Git基本配置设置"><span class="toc-text">1.3Git基本配置设置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-创建一个新的本地仓库"><span class="toc-text">2.创建一个新的本地仓库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-文件新增、提交、删除以及撤消"><span class="toc-text">3.文件新增、提交、删除以及撤消</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1创建新文件"><span class="toc-text">3.1创建新文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2从暂存区中撤消"><span class="toc-text">3.2从暂存区中撤消</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3从本地仓库删除"><span class="toc-text">3.3从本地仓库删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4从本地仓库撤消删除"><span class="toc-text">3.4从本地仓库撤消删除</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-文件修改、比较、撤消"><span class="toc-text">4.文件修改、比较、撤消</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-新增一个文件learngit-txt文件并修改readme"><span class="toc-text">4.1 新增一个文件learngit.txt文件并修改readme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-确认修改的内容是否正确"><span class="toc-text">4.2 确认修改的内容是否正确</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3撤消对文件readme的修改"><span class="toc-text">4.3撤消对文件readme的修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4重新修改文件并加入到暂存区"><span class="toc-text">4.4重新修改文件并加入到暂存区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5将文件从暂存区撤消"><span class="toc-text">4.5将文件从暂存区撤消</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1未添加到暂存区之前删除恢复"><span class="toc-text">5.1未添加到暂存区之前删除恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2添加到暂存区之后删除恢复"><span class="toc-text">5.2添加到暂存区之后删除恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3文件提交到仓库后删除恢复"><span class="toc-text">5.3文件提交到仓库后删除恢复</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-合并提交"><span class="toc-text">6.合并提交</span></a></li></ol>
+  </div>
+
+
+  </div>
+
+</div>
+
+<div class="copyright">
+    <span>本作品采用</span>
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">知识共享署名 4.0 国际许可协议</a>
+    <span>进行许可。 转载时请注明原文链接。</span>
+</div>
+
+
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2020/03/19/cross-platform-development-summary/" rel="next" title="跨平台应用程序开发方法大盘点（建议收藏备用）">
+          跨平台应用程序开发方法大盘点（建议收藏备用）
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+          
+      </div>
+    </div>
+  
+
+
+
+    </div>
+
+    
+
+  </div>
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+        <a class="bottom-item" href="http://www.w3c0.com" target="_blank">w3c</a> |
+        <a class="bottom-item" href="/">友情链接</a> |
+        <a class="bottom-item" href="https://hexo.io" target="_blank">Powered by hexo</a> |
+        <!-- <a class="bottom-item" href="https://github.com/fooying/hexo-theme-xoxo-plus" target="_blank">Theme xoxo-plus</a> | -->
+        <!-- <a class="bottom-item" href="/atom.xml">订阅</a> -->
+    </div>
+</footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+  
+<script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+
+</body>
+</html>
