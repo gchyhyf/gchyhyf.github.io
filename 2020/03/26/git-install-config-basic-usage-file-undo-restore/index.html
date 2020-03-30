@@ -105,29 +105,43 @@
       <span id="busuanzi_value_page_pv"></span> 点击
     </span>
       <span class="slash">/</span>
-      <span class="read">阅读耗时 23 分钟</span>
+      <span class="read">阅读耗时 25 分钟</span>
     </header>
 
     <div class="post-content">
       <h1 id="1-Git起步">1.Git起步</h1>
 <h2 id="1-1GIT使用背景知识（必读）">1.1GIT使用背景知识（必读）</h2>
-<p>**git是什么？  **<br>
+<p><strong>git是什么？</strong><br>
 Git是目前世界上最先进的、开源的、分布式的版本控制系统，注意这里面最重要的一个词：<strong>分布式</strong>。<br>
 这意味着，每个人都可以通过git独立工作并且电脑上有自己的独立仓库，当需要协同工作时，以某种方式进行协作即可。<br>
 git不仅可以用来管理软件源代码，也可以用来管理各类文档，尽管它被大多数程序员用来管理程序代码。</p>
 <p><strong>git协同工作的方式</strong><br>
 通过本地–&gt;中央（远程）仓库，中央（远程）仓库–&gt;本地的方法进行同步。具体来说，就是一部分团队成员先在本地工作，然后推送（同步）至中央（远程）仓库，而另一部分团队成员再从中央仓库拉取（同步）至本地（远程）仓库。</p>
 <p><strong>git使用的相关概念</strong></p>
+<p>现在请注意，如果你希望后面的学习更顺利，请记住下面这些关于 Git 的概念。</p>
 <ul>
 <li><strong>中央（远程）仓库:</strong> 方便团队协作的中介和枢纽，也作为一个组织进行资料（如代码）统一管理和备份的必要方式、措施。</li>
 <li><strong>本地仓库：</strong> 团队成员用于本机工作的目录,本地仓库分为三个区域：
 <ul>
 <li>Working Tree：工作目录(也叫Working Area，工作区)，即可以用<code>ls/dir</code>命令可以看到的文件等信息。工作区是对项目的某个版本独立提取出来的内容。 这些从 Git 仓库的压缩数据库中提取出来的文件，放在磁盘上供你使用或修改。</li>
-<li>Stage Area：暂存区域。暂存区是一个文件(即文件Index，保存了下次将要提交的文件列表信息，一般在 Git 仓库目录中。 按照 Git 的术语叫做“索引”，不过一般说法还是叫“暂存区”。</li>
+<li>Stage Area：暂存区域。暂存区是一个文件(即文件Index)，保存了下次将要提交的文件列表信息，一般在 Git 仓库目录中。 按照 Git 的术语叫做“索引”，不过一般说法还是叫“暂存区”。</li>
 <li>.git Directory: Git 仓库目录(repository)是 Git 用来保存项目的元数据和对象数据库的地方。 这是 Git 中最重要的部分，从其它计算机克隆仓库时，复制的就是这里的数据。</li>
 </ul>
 </li>
 </ul>
+<p><img src="/images/areas.png" alt="三种状态"></p>
+<ul>
+<li>
+<p><strong>三种状态：</strong>  Git 有三种状态，你的文件可能处于其中之一： 已提交（committed）、已修改（modified） 和 已暂存（staged）。</p>
+<ul>
+<li>已修改表示修改了文件，但还没保存到数据库中。</li>
+<li>已暂存表示对一个已修改文件的当前版本做了标记，使之包含在下次提交的快照中。</li>
+<li>已提交表示数据已经安全地保存在本地数据库中。</li>
+</ul>
+<p>这会让我们的 Git 项目拥有三个阶段：工作区、暂存区以及 Git 目录，即在上文提到的本地仓库的三个区域。</p>
+</li>
+</ul>
+<p><img src="/images/lifecycle.png" alt="三种状态"></p>
 <p><strong>基本的 Git 工作流程如下：</strong></p>
 <ul>
 <li>在工作区中修改文件。</li>
@@ -165,7 +179,7 @@ git不仅可以用来管理软件源代码，也可以用来管理各类文档�
 <p>在 Windows 系统上，如果你想要使用别的文本编辑器，那么必须指定可执行文件的完整路径。 它可能随你的编辑器的打包方式而不同。</p>
 <p>设置windows下默认的记事本作为编辑器代码如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config core.editor notepad</span></span><br></pre></td></tr></table></figure>
-<h1 id="2-创建一个新的本地仓库">2.创建一个新的本地仓库</h1>
+<h1 id="2-创建新仓库">2.创建新仓库</h1>
 <p><strong>创建测试目录</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir localtest</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> localtest</span></span><br></pre></td></tr></table></figure>
 <p><strong>对目录初始化</strong></p>
@@ -232,9 +246,9 @@ Untracked files的意思是“未跟踪的文件”。</p>
 <p><strong>使用<code>git reset</code>命令进行撤消</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">从暂存区撤消单个文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset head readme</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset head learngit.txt</span></span><br><span class="line"><span class="meta">#</span><span class="bash">将所有变更从暂存区撤消</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset head</span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">---</span><br><span class="line">On branch master</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line">        modified:   readme</span><br><span class="line">Untracked files:</span><br><span class="line">  (use "git add &lt;file&gt;..." to include in what will be committed)</span><br><span class="line">        learngit.txt</span><br><span class="line">no changes added to commit (use "git add" and/or "git commit -a")</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>本节介绍的方法，对新增、修改等文件均有效，且内容不会丢失。</p>
+<p>本节介绍的方法，对文件新增、修改等均有效，且内容不会丢失。</p>
 </blockquote>
-<p>#5.文件在工作目录中被删除之后的恢复（撤消）</p>
+<h1 id="5-文件在工作目录中被删除之后的恢复（撤消）">5.文件在工作目录中被删除之后的恢复（撤消）</h1>
 <blockquote>
 <p>在工作目录中删除，是指通过操作系统进行删除操作，例如通过del,rm命令。</p>
 </blockquote>
@@ -272,7 +286,7 @@ Untracked files的意思是“未跟踪的文件”。</p>
     
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Git起步"><span class="toc-text">1.Git起步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1GIT使用背景知识（必读）"><span class="toc-text">1.1GIT使用背景知识（必读）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2Git安装"><span class="toc-text">1.2Git安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3Git基本配置设置"><span class="toc-text">1.3Git基本配置设置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-创建一个新的本地仓库"><span class="toc-text">2.创建一个新的本地仓库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-文件新增、提交、删除以及撤消"><span class="toc-text">3.文件新增、提交、删除以及撤消</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1创建新文件"><span class="toc-text">3.1创建新文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2从暂存区中撤消"><span class="toc-text">3.2从暂存区中撤消</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3从本地仓库删除"><span class="toc-text">3.3从本地仓库删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4从本地仓库撤消删除"><span class="toc-text">3.4从本地仓库撤消删除</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-文件修改、比较、撤消"><span class="toc-text">4.文件修改、比较、撤消</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-新增一个文件learngit-txt文件并修改readme"><span class="toc-text">4.1 新增一个文件learngit.txt文件并修改readme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-确认修改的内容是否正确"><span class="toc-text">4.2 确认修改的内容是否正确</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3撤消对文件readme的修改"><span class="toc-text">4.3撤消对文件readme的修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4重新修改文件并加入到暂存区"><span class="toc-text">4.4重新修改文件并加入到暂存区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5将文件从暂存区撤消"><span class="toc-text">4.5将文件从暂存区撤消</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1未添加到暂存区之前删除恢复"><span class="toc-text">5.1未添加到暂存区之前删除恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2添加到暂存区之后删除恢复"><span class="toc-text">5.2添加到暂存区之后删除恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3文件提交到仓库后删除恢复"><span class="toc-text">5.3文件提交到仓库后删除恢复</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-合并提交"><span class="toc-text">6.合并提交</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Git起步"><span class="toc-text">1.Git起步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1GIT使用背景知识（必读）"><span class="toc-text">1.1GIT使用背景知识（必读）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2Git安装"><span class="toc-text">1.2Git安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3Git基本配置设置"><span class="toc-text">1.3Git基本配置设置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-创建新仓库"><span class="toc-text">2.创建新仓库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-文件新增、提交、删除以及撤消"><span class="toc-text">3.文件新增、提交、删除以及撤消</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1创建新文件"><span class="toc-text">3.1创建新文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2从暂存区中撤消"><span class="toc-text">3.2从暂存区中撤消</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3从本地仓库删除"><span class="toc-text">3.3从本地仓库删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4从本地仓库撤消删除"><span class="toc-text">3.4从本地仓库撤消删除</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-文件修改、比较、撤消"><span class="toc-text">4.文件修改、比较、撤消</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-新增一个文件learngit-txt文件并修改readme"><span class="toc-text">4.1 新增一个文件learngit.txt文件并修改readme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-确认修改的内容是否正确"><span class="toc-text">4.2 确认修改的内容是否正确</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3撤消对文件readme的修改"><span class="toc-text">4.3撤消对文件readme的修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4重新修改文件并加入到暂存区"><span class="toc-text">4.4重新修改文件并加入到暂存区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5将文件从暂存区撤消"><span class="toc-text">4.5将文件从暂存区撤消</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-文件在工作目录中被删除之后的恢复（撤消）"><span class="toc-text">5.文件在工作目录中被删除之后的恢复（撤消）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1未添加到暂存区之前删除恢复"><span class="toc-text">5.1未添加到暂存区之前删除恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2添加到暂存区之后删除恢复"><span class="toc-text">5.2添加到暂存区之后删除恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3文件提交到仓库后删除恢复"><span class="toc-text">5.3文件提交到仓库后删除恢复</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-合并提交"><span class="toc-text">6.合并提交</span></a></li></ol>
   </div>
 
 
@@ -300,6 +314,11 @@ Untracked files的意思是“未跟踪的文件”。</p>
   
       <div class="post-nav-item post-nav-prev">
           
+          <a href="/2020/03/30/git-remote-repository-created-related-push/" rel="prev" title="Git文件管理从入门到精通系统系列：远程仓库创建、关联与推送">
+            Git文件管理从入门到精通系统系列：远程仓库创建、关联与推送
+          </a>
+          <span>〉</span>
+        
       </div>
     </div>
   
