@@ -21,7 +21,7 @@
   
   <link rel="icon" type="image/x-icon" href="/images/footer-logo.png">
   
-  <title>linux-mac系统免密登录和复制文件的设置方法 [ 程序与算法 - 郭春辉的博客 - ]</title>
+  <title>linux免密（证书）远程登录方法大盘点 [ 程序与算法 - 郭春辉的博客 - ]</title>
   
     <!-- stylesheets list from config.yml -->
     
@@ -85,7 +85,7 @@
   <article class="post" id="post">
     <header class="post-header text-center">
       <h1 class="title">
-        linux-mac系统免密登录和复制文件的设置方法
+        linux免密（证书）远程登录方法大盘点
       </h1>
       <span>
         
@@ -113,10 +113,19 @@
 <p>命令行方式远程登录LINUX或者UNIX，若每次输入帐号密码等信息，既不方便、也不安全，如果是需要复制文件，就更麻烦，所以一般会进行ssh免密设置。<br>
 LINUX类系统操作基本类似，若目标主机是MAC个人电脑，则略有不同，下面进行详细说明。</p>
 </blockquote>
+<h1 id="1-目标主机是Linux">1.目标主机是Linux</h1>
+<h2 id="1-1客户端为命令行方式（linux-windows">1.1客户端为命令行方式（linux,windows)</h2>
+<h2 id="1-2客户端为图形界面方式（linux-windows">1.2客户端为图形界面方式（linux,windows)</h2>
+<h1 id="2-目标主机是Windows">2.目标主机是Windows</h1>
+<h1 id="3-多服务器的管理（ssh-agent">3.多服务器的管理（ssh-agent)</h1>
+<p>windows下玩转LINUX</p>
+<p>LINUX下玩转Windows</p>
+<p>Java<br>
+Java创建Serverlet的方法</p>
 <h1 id="1-LINUX类系统的设置方法">1.LINUX类系统的设置方法</h1>
 <h2 id="1-1生成client-host的公钥和私钥">1.1生成client host的公钥和私钥</h2>
 <p>命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/root/.ssh/id_rsa): </span><br><span class="line">Enter passphrase (empty for no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved in /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">05:c7:16:dc:77:d9:06:fc:df:4b:74:74:6d:28:06:f0 root@iZ94cf7z6g3Z</span><br><span class="line">The key's randomart image is:</span><br><span class="line">+--[ RSA 2048]----+</span><br><span class="line">|        o+++ ..o+|</span><br><span class="line">|         ++ + +.O|</span><br><span class="line">|         .E. o *.|</span><br><span class="line">|         .     .o|</span><br><span class="line">|        S     . +|</span><br><span class="line">|               .o|</span><br><span class="line">|              . .|</span><br><span class="line">|               . |</span><br><span class="line">|                 |</span><br><span class="line">+-----------------+</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/root/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">05:c7:16:dc:77:d9:06:fc:df:4b:74:74:6d:28:06:f0 root@iZ94cf7z6g3Z</span><br><span class="line">The key's randomart image is:</span><br><span class="line">+--[ RSA 2048]----+</span><br><span class="line">|        o+++ ..o+|</span><br><span class="line">|         ++ + +.O|</span><br><span class="line">|         .E. o *.|</span><br><span class="line">|         .     .o|</span><br><span class="line">|        S     . +|</span><br><span class="line">|               .o|</span><br><span class="line">|              . .|</span><br><span class="line">|               . |</span><br><span class="line">|                 |</span><br><span class="line">+-----------------+</span><br></pre></td></tr></table></figure>
 <p>一路回车，一切按默认值就好。</p>
 <p>上述命令生成的密钥对, 默认保存在 /root/.ssh(或~/.ssh)目录下, 其中<br>
 id_rsa 为私钥；id_rsa.pub为公钥</p>
@@ -150,7 +159,7 @@ id_rsa 为私钥；id_rsa.pub为公钥</p>
     
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-LINUX类系统的设置方法"><span class="toc-text">1.LINUX类系统的设置方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1生成client-host的公钥和私钥"><span class="toc-text">1.1生成client host的公钥和私钥</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2使用ssh-copy-id或scp命令将client-host的公钥传输到server-host或destination-host"><span class="toc-text">1.2使用ssh-copy-id或scp命令将client host的公钥传输到server host或destination host</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3设置权限"><span class="toc-text">1.3设置权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4双向免密登录"><span class="toc-text">1.4双向免密登录</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-MAC的注意事项"><span class="toc-text">2.MAC的注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1开启远程登录"><span class="toc-text">2.1开启远程登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2重启server-host上的相关服务（如果设置不生效）"><span class="toc-text">2.2重启server host上的相关服务（如果设置不生效）</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-目标主机是Linux"><span class="toc-text">1.目标主机是Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1客户端为命令行方式（linux-windows"><span class="toc-text">1.1客户端为命令行方式（linux,windows)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2客户端为图形界面方式（linux-windows"><span class="toc-text">1.2客户端为图形界面方式（linux,windows)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-目标主机是Windows"><span class="toc-text">2.目标主机是Windows</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-多服务器的管理（ssh-agent"><span class="toc-text">3.多服务器的管理（ssh-agent)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-LINUX类系统的设置方法"><span class="toc-text">1.LINUX类系统的设置方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1生成client-host的公钥和私钥"><span class="toc-text">1.1生成client host的公钥和私钥</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2使用ssh-copy-id或scp命令将client-host的公钥传输到server-host或destination-host"><span class="toc-text">1.2使用ssh-copy-id或scp命令将client host的公钥传输到server host或destination host</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3设置权限"><span class="toc-text">1.3设置权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4双向免密登录"><span class="toc-text">1.4双向免密登录</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-MAC的注意事项"><span class="toc-text">2.MAC的注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1开启远程登录"><span class="toc-text">2.1开启远程登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2重启server-host上的相关服务（如果设置不生效）"><span class="toc-text">2.2重启server host上的相关服务（如果设置不生效）</span></a></li></ol></li></ol>
   </div>
 
 
@@ -170,16 +179,16 @@ id_rsa 为私钥；id_rsa.pub为公钥</p>
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/2020/03/06/linux-remote-login-with-lcertificate-and-no-password-sumarry/" rel="next" title="linux免密（证书）远程登录方法大盘点">
-          linux免密（证书）远程登录方法大盘点
+          <a href="/2019/06/11/Peer-to-Peer_P2P_communication_across_middleboxes/" rel="next" title="Peer-to-Peer (P2P) communication across middleboxes">
+          Peer-to-Peer (P2P) communication across middleboxes
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
           
-          <a href="/2020/03/10/you-must-know-15-rules-of-the-software-project-manage/" rel="prev" title="你必须要知道的软件项目开发管理15条军规">
-            你必须要知道的软件项目开发管理15条军规
+          <a href="/2020/03/06/linux-mac-ssh-without-password/" rel="prev" title="linux-mac系统免密登录和复制文件的设置方法">
+            linux-mac系统免密登录和复制文件的设置方法
           </a>
           <span>〉</span>
         
