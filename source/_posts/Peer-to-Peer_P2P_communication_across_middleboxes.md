@@ -1,6 +1,15 @@
 ---
-title: >-
-  Peer-to-Peer (P2P) communication across middleboxes
+title: Peer-to-Peer (P2P) communication across middleboxes
+description: Present-day Internet has seen ubiquitous deployment of
+   "middleboxes" such as network address translators(NAT), driven
+   primarily by the ongoing depletion of the IPv4 address space.  The
+   asymmetric addressing and connectivity regimes established by these
+   middleboxes, however, have created unique problems for peer-to-peer
+   (P2P) applications and  protocols, such as teleconferencing and
+   multiplayer on-line gaming. These issues are likely to persist even
+   into the IPv6 world, where NAT is often used as an IPv4 compatibility
+   mechanism [NAT-PT], and firewalls will still be commonplace even 
+   after NAT is no longer required.
 date: 2019-06-11 19:10:36
 categories:
 - [开发,网络]

@@ -1,6 +1,6 @@
 ---
-title: >-
-  在RedHat 5.6 x64下安装Nginx
+title: 在RedHat 5.6 x64下安装Nginx
+description: 有一台客户服务器所安装的系统比较老，据说无法安装Nginx，今天有点时间，特意看了一下顺手解决之。老版本linux的问:版本适配问题；yum源失效问题，无法使用yum安装；无法安装GCC等等
 date: 2019-05-23 19:04:21
 categories:
 - [运维,web-server]

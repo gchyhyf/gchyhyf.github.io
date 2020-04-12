@@ -22,11 +22,11 @@ if (is_home()) pageTitle+= config.subtitle;
     <meta name="keywords" content="<%= config.keywords %>" />
   <% } %>
 
-  <% if (config.description) { %>
-    <meta name="description" content="<%= config.description %>" />
-  <% } else {  %>
+  <% if (page.description) { %>
     <meta name="description" content="<%= page.description || page.title || (config.title + ',' + config.subtitle) %>" />
-  <% } %>
+   <% } else {  %>
+    <meta name="description" content="<%= config.description %>" />
+    <% } %>
 
   <% if(theme.favicon) {%>
   <link rel="icon" type="image/x-icon" href="/images/<%=theme.favicon%>">

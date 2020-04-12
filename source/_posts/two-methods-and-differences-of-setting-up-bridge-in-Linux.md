@@ -1,5 +1,6 @@
 ---
 title: LINUX下两种设置网桥的方法与区别
+description: ovs-vsctl是openvswitch中提供的命令，它创建的网桥通常是自己的私有网桥；在配置文件中当做一个网卡进行设置;而brctl是LINUX本身的网桥管理命令.
 date: 2020-03-15 23:28:00
 categories:
 - [运维,网络]
