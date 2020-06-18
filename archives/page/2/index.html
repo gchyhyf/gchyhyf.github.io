@@ -96,6 +96,46 @@
       <div class="archives">
   
   <div class="archive" >
+  <a class="post-go" href="/2020/03/12/access-two-networks-in-one-computer/">
+    <div>
+      <span class="date">
+        03-12
+      </span>
+      <span class="slash">/</span>
+      在一台电脑上通过路由设置实现同时访问两个网络
+    </div>
+
+    <!--<div class="excerpt">-->
+      <!--1.应用场景
+同时上政务外网及互联网;
+同时上办公内网及互联网;
+在接入时，有双网卡的情况，也有一个网卡的情况。
+
+2.双网卡的情况
+这种情况下，一般是一个为有线网卡，另一个为无线网卡。有线连内部网或政务网，而无线连互联网（或是wifi,或是4G)。
+
+步骤
+
+1.先正常设置无线网卡，确认互联网正常能上网
+
+2.再设置有线网卡，设置时不要添加网关
+
+3.将有线网卡所在网段，进行路由设置.假如网关为：183.223.135.1
+
+只允许所有183.223.135段的IP都能访问，则执行：
+
+1
+
+
+route add 183.223.135.0 mask 255.255.255.0 183.22-->
+    <!--</div>-->
+  </a>
+
+</div>
+
+  
+  
+  <div class="archive" >
   <a class="post-go" href="/2020/03/12/What should-software-development-learn /">
     <div>
       <span class="date">
